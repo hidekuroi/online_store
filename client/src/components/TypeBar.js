@@ -6,6 +6,14 @@ import { observer } from 'mobx-react-lite'
 const TypeBar = observer(() => {
     const {device} = useContext(Context)
 
+    const selectType = (type) => {
+      if(type !== device.selectedType) {
+        device.setSelectedType(type)
+      } else {
+        device.setSelectedType({})
+      }
+    }
+
   return (
     <Card>
     <Card.Header>Тип товара</Card.Header>
@@ -14,7 +22,7 @@ const TypeBar = observer(() => {
             <ListGroup.Item key={type.id}
              style={{cursor: 'pointer'}}
              active={device.selectedType.id === type.id}
-             onClick={() => {device.setSelectedType(type)}}>
+             onClick={() => selectType(type)}>
                 {type.name}
             </ListGroup.Item>)}
     </ListGroup>

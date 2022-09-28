@@ -1,0 +1,36 @@
+import { $authHost, $host } from "./APIindex";
+
+
+export const createType = async (typeName) => {
+    const response = await $authHost.post('api/type', {name: typeName})
+    return response.data
+}
+export const fetchTypes = async () => {
+    const response = await $host.get('api/type')
+    return response.data
+}
+
+export const createBrand = async (brandName) => {
+    const response = await $authHost.post('api/brand', {name: brandName})
+    return response.data
+}
+export const fetchBrands = async () => {
+    const response = await $host.get('api/brand')
+    return response.data
+}
+
+export const createDevice = async (device) => {
+    const response = await $authHost.post('api/device', device)
+    return response.data
+}
+export const fetchDevices = async (typeId, brandId, page, limit=9) => {
+    const response = await $host.get('api/device', {params: {
+        typeId, brandId, page, limit
+    }})
+    return response.data
+}
+export const fetchOneDevice = async (id) => {
+    const response = await $host.get('api/device/' + id)
+    return response.data
+}
+

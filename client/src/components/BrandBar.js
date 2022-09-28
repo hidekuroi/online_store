@@ -6,13 +6,21 @@ import {Context} from '../index'
 const BrandBar = observer(() => {
     const {device} = useContext(Context)
 
+    const selectBrand = (brand) => {
+      if(brand !== device.selectedBrand) {
+        device.setSelectedBrand(brand)
+      } else {
+        device.setSelectedBrand({})
+      }
+    }
+
   return (
     <Row className="d-inline-flex">
         {device.brands.map(brand => 
             <Col><Card key={brand.id}
              className='p-3'
              style={{cursor: 'pointer'}}
-             onClick={() => {device.setSelectedBrand(brand)}}
+             onClick={() => selectBrand(brand)}
              border={brand.id === device.selectedBrand.id ? 'primary' : 'default'}>
                 {brand.name}
             </Card></Col>

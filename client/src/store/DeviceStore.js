@@ -4,20 +4,13 @@ export default class DeviceStore {
     constructor(){
         this._selectedType = {}
         this._selectedBrand = {}
-        this._types = [
-            {id: 1, name: "Холодильники"},
-            {id: 2, name: "Смартфоны"},
-        ]
-        this._brands = [
-            {id: 1, name: "Samsung"},
-            {id: 2, name: "Apple"},
-        ]
-        this._devices = [
-            {id: 1, name: "IPhone 14 Pro", price: 1199, rating: 5, img: "https://my-apple-store.ru/wa-data/public/shop/products/30/26/12630/images/19824/19824.970.jpg"},
-            {id: 2, name: "IPhone 14 Pro", price: 1199, rating: 5, img: "https://my-apple-store.ru/wa-data/public/shop/products/30/26/12630/images/19824/19824.970.jpg"},
-            {id: 3, name: "IPhone 14 Pro", price: 1199, rating: 5, img: "https://my-apple-store.ru/wa-data/public/shop/products/30/26/12630/images/19824/19824.970.jpg"},
-            {id: 4, name: "IPhone 14 Pro", price: 1199, rating: 5, img: "https://my-apple-store.ru/wa-data/public/shop/products/30/26/12630/images/19824/19824.970.jpg"}
-        ]
+        this._types = []
+        this._brands = []
+        this._devices = []
+
+        this._page = 1
+        this._totalCount = 0
+        this._limit = 12
 
         makeAutoObservable(this)
     }
@@ -37,6 +30,15 @@ export default class DeviceStore {
     setSelectedBrand(brand) {
         this._selectedBrand = brand
     }
+    setPage(page) {
+        this._page = page
+    }
+    setTotalCount(count) {
+        this._totalCount = count
+    }
+    setLimit(limit) {
+        this._limit = limit
+    }
 
     get types() {
         return this._types
@@ -52,5 +54,14 @@ export default class DeviceStore {
     }
     get selectedBrand() {
         return this._selectedBrand
+    }
+    get page() {
+        return this._page
+    }
+    get totalCount() {
+        return this._totalCount
+    }
+    get limit() {
+        return this._limit
     }
 }
