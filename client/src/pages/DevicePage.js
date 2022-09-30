@@ -11,13 +11,15 @@ const DevicePage = () => {
   useEffect(() => {
     fetchOneDevice(id).then(data => setDevice(data))
   }, [])
-  
 
   return (
     <Container className="mt-3">
       <Row>
       <Col md={4}>
-        <Image width={400} height={400} src={process.env.REACT_APP_BASE_URL + device.img} />
+        <Image
+          style={{scale: '100%'}}
+        fluid
+         src={process.env.REACT_APP_BASE_URL + device.img} />
       </Col>
       <Col md={4}>
         <Row className="d-flex flex-column align-items-center justify-content-center">

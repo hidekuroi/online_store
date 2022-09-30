@@ -37,9 +37,10 @@ const NavBar = observer(() => {
                      onClick={() => {navigate(ADMIN_ROUTE)}}>Админ панель</Button>
                   }
                   <Button variant={'outline-light'} onClick={() => {
-                    navigate(LOGIN_ROUTE)
                     user.setUser({})
                     user.setIsAuth(false)
+                    navigate(LOGIN_ROUTE)
+                    localStorage.removeItem('token')
                   }}
                   style={{marginLeft: '10px'}}>Выйти</Button>
               </Nav>

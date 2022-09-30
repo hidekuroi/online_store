@@ -1,12 +1,14 @@
 import { observer } from 'mobx-react-lite'
 import React, { useContext, useState, useEffect } from 'react'
-import { Modal, Button, Form, Dropdown, Row, Col } from 'react-bootstrap'
+import { Modal, Button, Form, Dropdown, Row, Col, Alert } from 'react-bootstrap'
 import { createDevice, fetchBrands, fetchTypes } from '../../api/deviceApi'
 import { Context } from '../../index'
 
 
 const CreateDevice = observer(({show, onHide}) => {
     const {device} = useContext(Context)
+    const [showSuccess, setShowSuccess] = useState(false)
+    const [showError, setShowError] = useState(false)
     const [info, setInfo] = useState([])
 
     const [name, setName] = useState('')
@@ -20,7 +22,7 @@ const CreateDevice = observer(({show, onHide}) => {
         fetchBrands().then(data => {
           device.setBrands(data)
         })
-      }, [])
+      }, [show])
 
     const addInfo = () => {
         setInfo([...info, {title: '', description: '', number: Date.now()}])
@@ -39,15 +41,28 @@ const CreateDevice = observer(({show, onHide}) => {
     }
 
     const addDevice = () => {
-        const formData = new FormData()
-        formData.append('name', name)
-        formData.append('price', price)
-        formData.append('brandId', device.selectedBrand.id)
-        formData.append('typeId', device.selectedType.id)
-        formData.append('img', file)
-        formData.append('info', JSON.stringify(info))
-        
-        createDevice(formData).then(data => console.log('created'))
+        if(name && price && device.selectedBrand.id && device.selectedType.id, file) {
+            const formData = new FormData()
+            formData.append('name', name)
+            formData.append('price', price)
+            formData.append('brandId', device.selectedBrand.id)
+            formData.append('typeId', device.selectedType.id)
+            formData.append('img', file)
+            formData.append('info', JSON.stringify(info))
+            
+            createDevice(formData).then(data => console.log('created'))
+
+            setShowSuccess(true)
+            setTimeout(() => {
+                setShowSuccess(false)
+            }, 1500);
+        }
+        else {
+            setShowError(true)
+            setTimeout(() => {
+                setShowError(false)
+            }, 1500);
+        }
     }
 
   return (
@@ -117,10 +132,19 @@ const CreateDevice = observer(({show, onHide}) => {
                 )}
         </Form>
 
+        <Alert className='mt-2 d-flex' show={showSuccess} variant="success">
+            <Alert.Heading>Устройство добавлено.</Alert.Heading>
+        </Alert>
+
+        <Alert className='mt-2 d-flex' show={showError} variant="danger">
+            <Alert.Heading>Заполните все обязательные поля.</Alert.Heading>
+        </Alert>
+
     </Modal.Body>
+
     <Modal.Footer>
         <Button variant="primary" onClick={addDevice}>Добавить</Button>
-        <Button variant="danger" onClick={onHide}>Закрыть</Button>
+        <Button variant="outline-danger" onClick={onHide}>Закрыть</Button>
     </Modal.Footer>
   </Modal>
   )

@@ -15,7 +15,9 @@ const Auth = observer(() => {
     const [password, setPassword] = useState('')
 
 
-    const click = async () => {
+    const click = async (e) => {
+        e.preventDefault()
+        e.stopPropagation()
         try {
             let data
             if(isLogin) {
@@ -41,15 +43,15 @@ const Auth = observer(() => {
     >
         <Card style={{width: 600}} className="p-5">
             <h2 className="m-auto">{isLogin ? 'Авторизация' : 'Регистрация'}</h2>
-            <Form className="d-flex flex-column">
+            <Form onSubmit={(e) => click(e)} className="d-flex flex-column">
                 <Form.Control value={email}
                  onChange={(e) => setEmail(e.target.value)}
                   className="mt-3" placeholder="Введите email"/>
                 <Form.Control value={password}
                  onChange={(e) => setPassword(e.target.value)}
                   className="mt-3" type="password" placeholder="Введите пароль"/>
-                <Button variant="outline-primary" className="mt-3 align-self-center"
-                    onClick={() => click()}
+                <Button type='sumbit' variant="outline-primary" className="mt-3 align-self-center"
+                    onClick={(e) => click(e)}
                 >
                     {isLogin ? 'Войти' : 'Зарегистрироваться'}
                 </Button>

@@ -10,10 +10,11 @@ const DeviceItem = ({device, brand}) => {
 
   return (
     <Col md={3} className='mt-3'>
-        <Card style={{width: 180, cursor: "pointer", border: 'light'}} onClick={() => navigate(`${DEVICE_ROUTE}/${device.id}`)}>
-            <Card.Img variant='top' src={process.env.REACT_APP_BASE_URL + device.img}/>
+        <Card style={{width: 180, border: 'light'}}>
+            <Card.Img style={{cursor: 'pointer'}} onClick={() => navigate(`${DEVICE_ROUTE}/${device.id}`)}
+             variant='top' src={process.env.REACT_APP_BASE_URL + device.img}/>
             <Card.Body>
-                <Card.Text style={{marginBottom: -5, color: 'gray'}}>{brand}</Card.Text>
+                <Card.Text style={{marginBottom: -3, color: 'gray', marginTop: -10}}>{brand}</Card.Text>
                 <Card.Title>{device.name}</Card.Title>
                 <Card.Text style={{fontWeight: 'bold', fontSize: 24}}>{device.price}$</Card.Text>
                 <Card.Text className='d-flex align-items-center'>
