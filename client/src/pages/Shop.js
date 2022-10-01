@@ -7,9 +7,12 @@ import DeviceList from '../components/DeviceList'
 import TypeBar from '../components/TypeBar'
 import { fetchBrands, fetchDevices, fetchTypes } from '../api/deviceApi'
 import Pages from '../components/Pages'
+import { getBasketDevices } from '../api/basketApi'
 
 const Shop = observer(() => {
   const {device} = useContext(Context)
+  const {basket} = useContext(Context)
+  const {user} = useContext(Context)
 
   useEffect(() => {
     fetchTypes().then(data => {
@@ -22,6 +25,9 @@ const Shop = observer(() => {
       device.setDevices(data.rows)
       device.setTotalCount(data.count)
     })
+    if(user.isAuth){getBasketDevices().then(data => {
+      basket.setBasketDevices(data)
+    })}
 
     return () => {
       device.setSelectedBrand({})
@@ -35,6 +41,9 @@ const Shop = observer(() => {
       device.setDevices(data.rows)
       device.setTotalCount(data.count)
     })
+    if(user.isAuth){getBasketDevices().then(data => {
+      basket.setBasketDevices(data)
+    })}
   }, [device.page, device.selectedBrand, device.selectedType])
   
   

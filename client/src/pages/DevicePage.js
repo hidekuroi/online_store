@@ -3,8 +3,10 @@ import { Container, Image, Col, Row, Button, Card } from 'react-bootstrap'
 import star from '../assets/star.svg'
 import { useParams } from 'react-router-dom'
 import { fetchOneDevice } from '../api/deviceApi'
+import BasketButton from '../components/BasketButton'
+import { observer } from 'mobx-react-lite'
 
-const DevicePage = () => {
+const DevicePage = observer(() => {
   const [device, setDevice] = useState({info: []})
   const {id} = useParams()
 
@@ -33,7 +35,7 @@ const DevicePage = () => {
       <Col md={4}>
         <Card className="justify-content-center d-flex flex-column align-items-center pt-2 pb-2" style={{backgroundColor: 'rgba(250,250,250)'}}>
           <h3>{`${device.price}`}$</h3>
-          <Button variant="outline-primary">Добавить в корзину</Button>
+          <BasketButton deviceId={Number(id)}/>
         </Card>
       </Col>
       </Row>
@@ -46,6 +48,6 @@ const DevicePage = () => {
       </Row>
     </Container>
   )
-}
+})
 
 export default DevicePage

@@ -3,7 +3,7 @@ import {makeAutoObservable} from 'mobx'
 export default class BasketStore {
     constructor(){
         this._totalCount = 0
-        this._basketDevices = {}
+        this._basketDevices = []
         makeAutoObservable(this)
     }
 

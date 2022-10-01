@@ -25,13 +25,12 @@ const Auth = observer(() => {
             }
             else {
                 data = await registration(email, password)
-                console.log(data)
             }
             user.setUser(data)
             user.setIsAuth(true)
             navigate('/')
-        }catch(e) {
-            alert(e.response.data.message)
+        }catch(err) {
+            alert(err.response.data.message)
         }
         
     }
@@ -46,12 +45,12 @@ const Auth = observer(() => {
             <Form onSubmit={(e) => click(e)} className="d-flex flex-column">
                 <Form.Control value={email}
                  onChange={(e) => setEmail(e.target.value)}
-                  className="mt-3" placeholder="Введите email"/>
+                  className="mt-3" type='email' placeholder="Введите email"/>
                 <Form.Control value={password}
                  onChange={(e) => setPassword(e.target.value)}
                   className="mt-3" type="password" placeholder="Введите пароль"/>
                 <Button type='sumbit' variant="outline-primary" className="mt-3 align-self-center"
-                    onClick={(e) => click(e)}
+                    
                 >
                     {isLogin ? 'Войти' : 'Зарегистрироваться'}
                 </Button>

@@ -3,6 +3,7 @@ import { Card, Col, Button } from 'react-bootstrap'
 import star from '../assets/star.svg'
 import {useNavigate} from 'react-router-dom'
 import { DEVICE_ROUTE } from '../utils/consts'
+import BasketButton from './BasketButton'
 
 const DeviceItem = ({device, brand}) => {
 
@@ -21,7 +22,7 @@ const DeviceItem = ({device, brand}) => {
                     {device.rating}
                     <img src={star} alt="Rating" width="14" height="14" />
                 </Card.Text>
-                <Button variant='primary' onClick={(e) => {console.log('btn')}}>В корзину</Button>
+                <BasketButton deviceId={device.id}/>
             </Card.Body>
         </Card>
     </Col>
