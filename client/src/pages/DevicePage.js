@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Image, Col, Row, Button, Card } from 'react-bootstrap'
 import star from '../assets/star.svg'
-import { useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { fetchOneDevice } from '../api/deviceApi'
 import BasketButton from '../components/BasketButton'
 import { observer } from 'mobx-react-lite'
+import { SHOP_ROUTE } from '../utils/consts'
 
 const DevicePage = observer(() => {
   const [device, setDevice] = useState({info: []})
   const {id} = useParams()
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchOneDevice(id).then(data => setDevice(data))
@@ -16,6 +18,7 @@ const DevicePage = observer(() => {
 
   return (
     <Container className="mt-3">
+      {device ? <>
       <Row>
       <Col md={4}>
         <Image
@@ -46,6 +49,10 @@ const DevicePage = observer(() => {
             className="d-inline-flex flex-column" key={info.id}>{info.title}: {info.description}</Row>
           )}
       </Row>
+      </>
+      :
+      <>404</>
+    }
     </Container>
   )
 })

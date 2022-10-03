@@ -22,7 +22,14 @@ class BasketController {
 
         for (let i = 0; i < basket_devices.length; i++) {        
                 const device = await Device.findOne({where: {id: basket_devices[i].deviceId}})
-                devices.push({basketDeviceId: basket_devices[i].id, deviceInfo: device})
+                
+                if(!device) {
+                    console.log("DIXONDIXONDIXON")
+                    devices.push({basketDeviceId: basket_devices[i].id, deviceInfo: {id: -1, name: "Данное устройство удалено", price: 0, rating: 0, brandId: 0, typeId: 0, img: 'bad.jpg'}})
+                }
+                else{
+                    devices.push({basketDeviceId: basket_devices[i].id, deviceInfo: device})
+                }
             }
 
         return res.json(devices)

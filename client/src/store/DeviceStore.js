@@ -10,7 +10,7 @@ export default class DeviceStore {
 
         this._page = 1
         this._totalCount = 0
-        this._limit = 12
+        this._limit = 16
 
         makeAutoObservable(this)
     }

@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { Pagination } from 'react-bootstrap'
 import { Context } from '../index'
 
@@ -11,7 +11,7 @@ const Pages = observer(() => {
     for (let p = 0; p < pageCount; p++) {
         pages.push(p + 1)
     }
-    
+
     
   return (
     <Pagination className='mt-3'>

@@ -15,8 +15,8 @@ const NavBar = observer(() => {
     const navigate = useNavigate()
 
   return (
-    <Navbar bg="dark" variant="dark">
-        <Container>
+    <Navbar bg="dark" variant="dark" >
+        <Container style={{overflowX: 'auto'}}>
           <Navbar.Brand><NavLink style={{color: 'white', textDecoration: 'none'}} to={SHOP_ROUTE}>Online Store</NavLink></Navbar.Brand>
           {user.isAuth ?
             <>
