@@ -1,6 +1,6 @@
 import {Context} from '../index'
 import React, {useContext, useState} from 'react'
-import {Container, Card, Form, Button, Row} from 'react-bootstrap'
+import {Container, Card, Form, Button, Row, Alert} from 'react-bootstrap'
 import {NavLink, useLocation, useNavigate} from 'react-router-dom'
 import { registration, login } from '../api/userApi'
 import { LOGIN_ROUTE, REGISTRATION_ROUTE } from '../utils/consts'
@@ -13,6 +13,8 @@ const Auth = observer(() => {
     const isLogin = location.pathname === LOGIN_ROUTE
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [userName, setUserName] = useState('')
+    const [show, setShow] = useState(false)
 
 
     const click = async (e) => {
@@ -21,10 +23,18 @@ const Auth = observer(() => {
         try {
             let data
             if(isLogin) {
-                data = await login(email, password)
+                if(email && password) data = await login(email, password)
+                else {
+                setShow(true)
+                return
+                }
             }
             else {
-                data = await registration(email, password)
+                if(email && password && userName) data = await registration(email, password, userName)
+                else {
+                setShow(true)
+                return
+                }
             }
             user.setUser(data)
             user.setIsAuth(true)
@@ -43,12 +53,20 @@ const Auth = observer(() => {
         <Card style={{width: 600}} className="p-5">
             <h2 className="m-auto">{isLogin ? 'Авторизация' : 'Регистрация'}</h2>
             <Form onSubmit={(e) => click(e)} className="d-flex flex-column">
+                <Form.Control value={userName} hidden={isLogin}
+                 onChange={(e) => setUserName(e.target.value)}
+                  className="mt-3" placeholder="Введите имя пользователя (отображается в комментариях)"/>
                 <Form.Control value={email}
                  onChange={(e) => setEmail(e.target.value)}
                   className="mt-3" type='email' placeholder="Введите email"/>
                 <Form.Control value={password}
                  onChange={(e) => setPassword(e.target.value)}
                   className="mt-3" type="password" placeholder="Введите пароль"/>
+
+                <Alert className='mt-3' variant="danger" show={show} onClose={() => setShow(false)} dismissible>
+                    <Alert.Heading>Введите все данные</Alert.Heading>
+                </Alert>
+
                 <Button type='sumbit' variant="outline-primary" className="mt-3 align-self-center"
                     
                 >

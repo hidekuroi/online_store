@@ -5,7 +5,8 @@ const User = sequelize.define('user', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     email: {type: DataTypes.STRING, unique: true},
     password: {type: DataTypes.STRING},
-    role: {type: DataTypes.STRING, defaultValue: "USER"}
+    role: {type: DataTypes.STRING, defaultValue: "USER"},
+    userName: {type: DataTypes.STRING, defaultValue: "Пользователь"}
 })
 
 
@@ -47,6 +48,11 @@ const DeviceInfo = sequelize.define('device_info', {
     description: {type: DataTypes.STRING, allowNill: false}
 })
 
+const Comment = sequelize.define('comment', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    body: {type: DataTypes.TEXT, allowNull: false}
+})
+
 const TypeBrand = sequelize.define('type_brand', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
@@ -81,6 +87,12 @@ DeviceInfo.belongsTo(Device)
 Brand.belongsToMany(Type, {through: TypeBrand}) 
 Type.belongsToMany(Brand, {through: TypeBrand}) 
 
+Device.hasMany(Comment)
+Comment.belongsTo(Device)
+
+User.hasMany(Comment)
+Comment.belongsTo(User)
+
 module.exports = {
     User, 
     Basket,
@@ -90,5 +102,6 @@ module.exports = {
     Type,
     Brand,
     Rating,
-    TypeBrand
+    TypeBrand,
+    Comment
 }

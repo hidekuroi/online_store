@@ -6,6 +6,7 @@ import { fetchOneDevice } from '../api/deviceApi'
 import BasketButton from '../components/BasketButton'
 import { observer } from 'mobx-react-lite'
 import { SHOP_ROUTE } from '../utils/consts'
+import Comments from '../components/Comments'
 
 const DevicePage = observer(() => {
   const [device, setDevice] = useState({info: []})
@@ -13,7 +14,7 @@ const DevicePage = observer(() => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetchOneDevice(id).then(data => setDevice(data))
+    if(id) fetchOneDevice(id).then(data => setDevice(data))
   }, [])
 
   return (
@@ -42,13 +43,22 @@ const DevicePage = observer(() => {
         </Card>
       </Col>
       </Row>
+
       <Row className="d-flex flex-column m-2">
         <h3>Характеристики:</h3>
-        {device.info.map((info, index) => 
-          <Row style={{backgroundColor: index % 2 === 0 ? 'rgba(250,250,250)' : 'transparent', padding: 7}}
-            className="d-inline-flex flex-column" key={info.id}>{info.title}: {info.description}</Row>
+        <Row className='m-2'>
+          {device.info.map((info, index) => 
+            <Row style={{backgroundColor: index % 2 === 0 ? 'rgba(250,250,250)' : 'transparent', padding: 7}}
+              className="d-inline-flex flex-column" key={info.id}>{info.title}: {info.description}</Row>
           )}
+        </Row>
       </Row>
+
+      <Row className="d-flex flex-column m-2" style={{paddingTop: 30, paddingBottom: 50}}>
+        <h3>Комментарии:</h3>
+        <Comments deviceId={id} />
+      </Row>
+      
       </>
       :
       <>404</>

@@ -1,7 +1,7 @@
 const ApiError = require('../error/ApiError')
 const uuid = require('uuid')
 const path = require('path')
-const {Device, DeviceInfo} = require('../models/models')
+const {Device, DeviceInfo, Comment, User} = require('../models/models')
 const { Op } = require("sequelize");
 const { Sequelize } = require('../db');
 
@@ -33,7 +33,7 @@ class DeviceController {
     }
     async getAll(req, res) {
         let {brandId, typeId, limit, page, searchQuery} = req.query
-        limit = limit || 9
+        limit = limit || 16
         page = page || 1
         let offset = page * limit - limit
 
@@ -43,7 +43,7 @@ class DeviceController {
             if(searchQuery) {
                 devices = await Device.findAndCountAll({where: {
                     name: {[Op.iLike]: `%${searchQuery}%`}
-                }})
+                }, limit, offset})
             }
             else devices = await Device.findAndCountAll({limit, offset})
         }
@@ -62,18 +62,29 @@ class DeviceController {
         return res.json(devices)
     }
     async getOne(req, res, next) {
-        const {id} = req.params
-        const device = await Device.findOne(
-            {
-                where: {id},
-                include: [{model: DeviceInfo, as: 'info'}]
-            },
-        )
-        return res.json(device)
+        try{
+            const {id} = req.params
+            const device = await Device.findOne(
+                {
+                    where: {id},
+                    include: [{model: DeviceInfo, as: 'info'}]
+                },
+            )
+            return res.json(device)
+        }
+        catch(e) {
+            next(ApiError.badRequest(e.message))
+        }
     }
     async delete(req, res) {
         const {id} = req.body
-        const count = await Device.destroy({where: {id}})
+        const deviceInfo = await DeviceInfo.destroy({where: {deviceId: id}})
+        const comments = await Comment.destroy({where: {deviceId: id}})
+        const count = await Device.destroy(
+            {
+                where: {id},
+            }
+        )
         return res.json(count)
     }
 }

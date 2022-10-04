@@ -8,6 +8,8 @@ export default class DeviceStore {
         this._brands = []
         this._devices = []
 
+        this._comments = []
+
         this._page = 1
         this._totalCount = 0
         this._limit = 16
@@ -31,6 +33,9 @@ export default class DeviceStore {
     setSelectedBrand(brand) {
         this.setPage(1)
         this._selectedBrand = brand
+    }
+    setComments(comments) {
+        this._comments = comments
     }
     setPage(page) {
         this._page = page
@@ -56,6 +61,9 @@ export default class DeviceStore {
     }
     get selectedBrand() {
         return this._selectedBrand
+    }
+    get comments() {
+        return this._comments
     }
     get page() {
         return this._page
