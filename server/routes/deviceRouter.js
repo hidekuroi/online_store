@@ -1,6 +1,7 @@
 const Router = require('express')
 const router = new Router()
 const deviceController = require('../controllers/deviceController')
+const authMiddleware = require('../middleware/authMiddleware')
 const checkRole = require('../middleware/roleCheckMiddleware')
 
 router.get('/', deviceController.getAll)

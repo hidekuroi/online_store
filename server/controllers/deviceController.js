@@ -1,7 +1,7 @@
 const ApiError = require('../error/ApiError')
 const uuid = require('uuid')
 const path = require('path')
-const {Device, DeviceInfo, Comment, User} = require('../models/models')
+const {Device, DeviceInfo, Comment, User, Rating} = require('../models/models')
 const { Op } = require("sequelize");
 const { Sequelize } = require('../db');
 
@@ -43,18 +43,18 @@ class DeviceController {
             if(searchQuery) {
                 devices = await Device.findAndCountAll({where: {
                     name: {[Op.iLike]: `%${searchQuery}%`}
-                }, limit, offset})
+                }, limit, offset, order: [['id', 'ASC']]})
             }
-            else devices = await Device.findAndCountAll({limit, offset})
+            else devices = await Device.findAndCountAll({limit, offset, order: [['id', 'ASC']]})
         }
         if(brandId && !typeId) {
-            devices = await Device.findAndCountAll({where: {brandId}, limit, offset})
+            devices = await Device.findAndCountAll({where: {brandId}, limit, offset, order: [['id', 'ASC']]})
         }
         if(!brandId && typeId) {
-            devices = await Device.findAndCountAll({where: {typeId}, limit, offset})
+            devices = await Device.findAndCountAll({where: {typeId}, limit, offset, order: [['id', 'ASC']]})
         }
         if(brandId && typeId) {
-            devices = await Device.findAndCountAll({where: {brandId, typeId}, limit, offset})
+            devices = await Device.findAndCountAll({where: {brandId, typeId}, limit, offset, order: [['id', 'ASC']]})
         }
 
 
@@ -87,6 +87,8 @@ class DeviceController {
         )
         return res.json(count)
     }
+
+    
 }
 
 module.exports = new DeviceController()

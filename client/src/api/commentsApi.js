@@ -10,3 +10,8 @@ export const addComment = async (deviceId, body) => {
     const response = await $authHost.post('api/comment', {deviceId, body})
     return response.data
 }
+
+export const removeComment = async (deviceId, commentId) => {
+    const response = await $authHost.delete('api/comment', {data: {deviceId, commentId}})
+    return response.data
+}

@@ -17,6 +17,11 @@ const BasketButton = observer(({deviceId}) => {
     }
 
     useEffect(() => {
+      if(basket.basketDevices.length > 0) basket.basketDevices.map(d => d.deviceInfo.id === deviceId && setIsAdded(true))
+    }, [deviceId])
+    
+
+    useEffect(() => {
         if(basket.basketDevices.length > 0) basket.basketDevices.map(d => d.deviceInfo.id === deviceId && setIsAdded(true))
     }, [basket.basketDevices])
     

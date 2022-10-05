@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Image, Col, Row, Button, Card } from 'react-bootstrap'
-import star from '../assets/star.svg'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { fetchOneDevice } from '../api/deviceApi'
 import BasketButton from '../components/BasketButton'
 import { observer } from 'mobx-react-lite'
 import { SHOP_ROUTE } from '../utils/consts'
 import Comments from '../components/Comments'
+import RatingComponent from '../components/RatingComponent'
 
 const DevicePage = observer(() => {
   const [device, setDevice] = useState({info: []})
@@ -30,9 +30,8 @@ const DevicePage = observer(() => {
       <Col md={4}>
         <Row className="d-flex flex-column align-items-center justify-content-center">
           <h2>{device.name}</h2>
-          <div className="d-flex align-items-center " style={{fontSize:32}}>
-            {`Рейтинг: ${device.rating}`}
-            <img src={star} alt="Rating" width="28" height="28" />
+          <div>
+            <RatingComponent deviceId={id} overallRating={device.rating} />
           </div>
         </Row>
       </Col>

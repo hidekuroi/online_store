@@ -19,7 +19,7 @@ const DeviceItem = ({device, brand}) => {
                 <Card.Title>{device.name}</Card.Title>
                 <Card.Text style={{fontWeight: 'bold', fontSize: 24}}>{device.price}$</Card.Text>
                 <Card.Text className='d-flex align-items-center'>
-                    {device.rating}
+                    {Math.floor(device.rating * 100) / 100}
                     <img src={star} alt="Rating" width="14" height="14" />
                 </Card.Text>
                 <BasketButton deviceId={device.id}/>

@@ -40,9 +40,6 @@ const Shop = observer(() => {
       device.setDevices(data.rows)
       device.setTotalCount(data.count)
     })
-    if(user.isAuth){getBasketDevices().then(data => {
-      basket.setBasketDevices(data)
-    })}
 
     return () => {
       device.setSelectedBrand({})

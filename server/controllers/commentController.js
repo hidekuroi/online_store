@@ -1,10 +1,11 @@
 const ApiError = require('../error/ApiError')
+const roleCheckMiddleware = require('../middleware/roleCheckMiddleware')
 const {Comment, User} = require('../models/models')
 
 
 class CommentController {
 
-    async addComent(req, res) {
+    async addComment(req, res) {
         const {deviceId, body} = req.body
         const comment = await Comment.create({deviceId, body, userId: req.user.id})
         
@@ -27,6 +28,28 @@ class CommentController {
         }
         catch(e) {
             next(ApiError.badRequest(e.message))
+        }
+    }
+    async deleteComment(req, res, next) {
+        const {deviceId, commentId} = req.body
+        if(req.user.role === 'ADMIN'){
+            try {
+                const comment = Comment.destroy({where: {deviceId, id: commentId}})
+                return res.json(comment)
+            }
+            catch(e) {
+                next(ApiError.badRequest(e.message))
+            }
+        }  
+        else {
+            try{
+                const comment = Comment.destroy({where: {deviceId, id: commentId, userId: req.user.id}})
+                
+                return res.json(comment)
+            }
+            catch(e) {
+                next(ApiError.badRequest(e.message))
+            }
         }
     }
 
