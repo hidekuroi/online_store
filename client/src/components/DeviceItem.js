@@ -11,7 +11,7 @@ const DeviceItem = ({device, brand}) => {
 
   return (
     <Col md={3} className='mt-3'>
-        <Card style={{width: 180, border: 'light'}}>
+        <Card style={{ border: 'light'}}>
             <Card.Img style={{cursor: 'pointer'}} onClick={() => navigate(`${DEVICE_ROUTE}/${device.id}`)}
              variant='top' src={process.env.REACT_APP_BASE_URL + device.img}/>
             <Card.Body>

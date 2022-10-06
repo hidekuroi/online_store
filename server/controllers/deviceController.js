@@ -28,8 +28,57 @@ class DeviceController {
             return res.json(device)
         } catch(e) {
             next(ApiError.badRequest(e.message))
-        }
-        
+        }  
+    }
+    async updateDevice(req, res, next) {
+        try {
+            let {name, price, brandId, typeId, info, id} = req.body
+            let img = {}
+            let fileName = ''
+            if(req.files) {
+                img = req.files.img
+                fileName = uuid.v4() + '.jpg'
+                img.mv(path.resolve(__dirname, '..', 'static', fileName))
+            }
+            let device = {}
+            if(req.files){
+                device = await Device.update({name, price, brandId, typeId, img: fileName}, {where: {id}})
+            }
+            else {
+                device = await Device.update({name, price, brandId, typeId}, {where: {id}})
+            }
+
+
+            if (info) {
+                info = JSON.parse(info)
+                info.forEach(i => {
+                    if(i.id){
+                        if(i.toDelete == false){
+                        DeviceInfo.update(
+                            {
+                            title: i.title,
+                            description: i.description,
+                            }, {where: {id: i.id}}
+                        )
+                    }
+                        if(i.toDelete == true) {
+                            DeviceInfo.destroy({where: {id: i.id}})
+                        }
+                    }
+                    else{
+                        DeviceInfo.create({
+                            title: i.title,
+                            description: i.description,
+                            deviceId: id
+                    })
+                }
+                });
+            }
+            
+            return res.json(device)
+        } catch(e) {
+            next(ApiError.badRequest(e.message))
+        }  
     }
     async getAll(req, res) {
         let {brandId, typeId, limit, page, searchQuery} = req.query
@@ -67,7 +116,8 @@ class DeviceController {
             const device = await Device.findOne(
                 {
                     where: {id},
-                    include: [{model: DeviceInfo, as: 'info'}]
+                    include: [{model: DeviceInfo, as: 'info'}],
+                    order: [[{ model: DeviceInfo, as: 'info' }, 'id', 'ASC']]
                 },
             )
             return res.json(device)
