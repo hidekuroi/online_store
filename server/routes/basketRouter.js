@@ -7,6 +7,7 @@ const checkRole = require('../middleware/roleCheckMiddleware')
 router.get('/', authMiddleware, basketController.getBasketDevices)
 router.post('/', authMiddleware, basketController.add)
 router.delete('/', authMiddleware, basketController.deleteBasketDevice)
+router.put('/', authMiddleware, basketController.updateAmount)
 
 
 module.exports = router

@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import React, { useEffect, useState, useContext } from 'react'
 import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
-import { addToBasket } from '../api/basketApi'
+import { addToBasket, getBasketDevices } from '../api/basketApi'
 import {Context} from '../index'
 
 const BasketButton = observer(({deviceId}) => {
@@ -12,7 +12,11 @@ const BasketButton = observer(({deviceId}) => {
     const navigate = useNavigate()
 
     const add = () => {
-        addToBasket(deviceId)
+        addToBasket(deviceId).then(data => {
+          getBasketDevices().then(d => {
+            basket.setBasketDevices(d.devices)
+          })
+        })
         setIsAdded(true)
     }
 

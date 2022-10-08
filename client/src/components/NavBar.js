@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import {Context} from '../index'
-import {Navbar, Container, Button, Card, Image, Row, Col} from 'react-bootstrap'
+import {Navbar, Container, Button, Card, Image, Row, Col, Badge} from 'react-bootstrap'
 import Nav from 'react-bootstrap/Nav'
 import { NavLink } from 'react-router-dom'
 import { ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/consts'
@@ -23,8 +23,10 @@ const NavBar = observer(() => {
               
               <Nav className="ml-auto" style={{color: 'white'}}>
                       <Button variant={'outline-primary'} style={{marginRight: '10px'}}
-                     onClick={() => {navigate(BASKET_ROUTE)}}><Image height={20} width={20}  src={cart}
+                     onClick={() => {navigate(BASKET_ROUTE)}}>
+                      <Image height={20} width={20}  src={cart}
                      style={{filter: 'invert(100%)'}}  />
+                      <Badge pill bg="danger">{basket.basketDevices.length}</Badge>
                       </Button>
 
               <div className='mt-auto mb-auto'

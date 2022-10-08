@@ -23,7 +23,7 @@ const App = observer(() => {
   useEffect(() => {
     if(user.isAuth){
       getBasketDevices().then(data => {
-      basket.setBasketDevices(data)
+      basket.setBasketDevices(data.devices)
     })}
   }, [user.isAuth])
   

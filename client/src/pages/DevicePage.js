@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Container, Image, Col, Row, Button, Card, Form, InputGroup} from 'react-bootstrap'
+import { Container, Image, Col, Row, Button, Card, Form, InputGroup, Modal} from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
-import { fetchOneDevice, updateDevice } from '../api/deviceApi'
+import { deleteDevice, fetchOneDevice, updateDevice } from '../api/deviceApi'
 import BasketButton from '../components/BasketButton'
 import { observer } from 'mobx-react-lite'
 import { SHOP_ROUTE } from '../utils/consts'
@@ -12,6 +12,7 @@ import {Context} from '../index'
 const DevicePage = observer(() => {
   const [device, setDevice] = useState({info: []})
   const [editMode, setEditMode] = useState(false)
+  const [isModal, setIsModal] = useState(false)
   const [file, setFile] = useState(null)
   const {id} = useParams()
   const {user} = useContext(Context)
@@ -33,6 +34,12 @@ const DevicePage = observer(() => {
       deviceCopy.info = [...device.info]
       deviceCopy.info.push({title: '', description: '', number: Date.now()})
       setDevice(deviceCopy)
+  }
+
+  const deviceDelete = () => {
+    deleteDevice(device.id).then(data => {
+      navigate('/')
+    })
   }
 
   const updateDev = (mode) => {
@@ -88,8 +95,11 @@ const DevicePage = observer(() => {
               setEditMode(!editMode)
               updateDev(!editMode)
             }}
-             variant={editMode ? 'outline-success' : 'outline-danger'}
+             variant={editMode ? 'outline-success' : 'outline-warning'}
              >{editMode ? "Сохранить" : "Редактировать данные устройства"}</Button>
+            <Button className='mt-2' onClick={() => setIsModal(true)}
+             variant='outline-danger' >Удалить устройство</Button>
+
           </Card.Footer>}
         </Card>
       </Col>
@@ -135,6 +145,25 @@ const DevicePage = observer(() => {
         <h3>Комментарии:</h3>
         <Comments deviceId={id} />
       </Row>
+
+      <Modal show={isModal}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Удаление устройства
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <h4>Вы действительно хотите удалить это устройство и все данные (+ комментарии) о нём?</h4>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant='danger' onClick={() => deviceDelete()}>Удалить</Button>
+        <Button onClick={() => setIsModal(false)}>Отмена</Button>
+      </Modal.Footer>
+    </Modal>
       
       </>
       :
