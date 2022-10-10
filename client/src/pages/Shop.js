@@ -42,14 +42,21 @@ const Shop = observer(() => {
     })
 
     return () => {
-      device.setSelectedBrand({})
-      device.setSelectedType({})
+      device.setSelectedBrand([])
+      device.setSelectedType([])
     }
     
   }, [])
 
   useEffect(() => {
-      fetchDevices(device.selectedType.id, device.selectedBrand.id, device.page, device.limit, searchValue).then(data => {
+    let brandIds = []
+    for (let i = 0; i < device.selectedBrand.length; i++) {
+      brandIds.push(device.selectedBrand[i].id)      
+    }
+
+    if (brandIds.length === 0) brandIds = null
+
+      fetchDevices(device.selectedType.id, brandIds, device.page, device.limit, searchValue).then(data => {
         device.setDevices(data.rows)
         device.setTotalCount(data.count)
       })
@@ -63,7 +70,10 @@ const Shop = observer(() => {
   return (
     <Container>
         <Row className="mt-3">
-            <Col md={3}><TypeBar/></Col>
+            <Col md={3} className='d-flex flex-column'>
+              <Row className=''><TypeBar/></Row>
+              <Row className='mt-2'><BrandBar /></Row>
+            </Col>
             <Col md={9}>
 
               <Form onSubmit={search} className='mt-2 mb-4'>
@@ -79,7 +89,6 @@ const Shop = observer(() => {
                 </InputGroup>
               </Form>
 
-                <BrandBar />
                 <DeviceList />
                 <Pages />
             </Col>

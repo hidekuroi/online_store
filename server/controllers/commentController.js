@@ -52,6 +52,18 @@ class CommentController {
             }
         }
     }
+    async getMyComments(req, res, next) {
+        let {userId} = req.params
+        userId = Number(userId)
+        let comments
+
+        if(userId === req.user.id){
+            console.log('DIXONDIXON')
+            comments = await Comment.findAll({where: {userId}})
+        }
+
+        return res.json(comments)
+    }
 
 }
 

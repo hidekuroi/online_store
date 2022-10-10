@@ -15,3 +15,8 @@ export const removeComment = async (deviceId, commentId) => {
     const response = await $authHost.delete('api/comment', {data: {deviceId, commentId}})
     return response.data
 }
+
+export const getMyComments = async (userId) => {
+    const response = await $authHost.get(`api/comment/${userId}`)
+    return response.data
+}

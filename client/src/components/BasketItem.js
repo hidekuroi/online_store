@@ -51,7 +51,7 @@ const BasketItem = ({d, brand, deleteBasketItem}) => {
                 </Card.Title>
                 <ButtonGroup>
                 <Button onClick={() => changeAmount(d.amount - 1)} variant='outline-secondary'>-</Button>
-                <div style={{padding: 0, border: '1px solid gray'}}>Количество: {d.amount}</div>
+                <div style={{padding: 0, border: '1px solid lightgray'}}>Количество: {d.amount}</div>
                 <Button onClick={() => changeAmount(d.amount + 1)} variant='outline-secondary'>+</Button>
               </ButtonGroup>
               </Card.Body>

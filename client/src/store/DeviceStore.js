@@ -3,7 +3,7 @@ import {makeAutoObservable} from 'mobx'
 export default class DeviceStore {
     constructor(){
         this._selectedType = {}
-        this._selectedBrand = {}
+        this._selectedBrand = []
         this._types = []
         this._brands = []
         this._devices = []
@@ -33,6 +33,10 @@ export default class DeviceStore {
     setSelectedBrand(brand) {
         this.setPage(1)
         this._selectedBrand = brand
+    }
+    pushSelectedBrand(brand) {
+        this.setPage(1)
+        this._selectedBrand = [...this._selectedBrand, brand]
     }
     setComments(comments) {
         this._comments = comments

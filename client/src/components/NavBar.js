@@ -3,7 +3,7 @@ import {Context} from '../index'
 import {Navbar, Container, Button, Card, Image, Row, Col, Badge} from 'react-bootstrap'
 import Nav from 'react-bootstrap/Nav'
 import { NavLink } from 'react-router-dom'
-import { ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/consts'
+import { ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/consts'
 import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom'
 import avatar from '../assets/person-circle.svg'
@@ -29,16 +29,22 @@ const NavBar = observer(() => {
                       <Badge pill bg="danger">{basket.basketDevices.length}</Badge>
                       </Button>
 
-              <div className='mt-auto mb-auto'
-               style={{backgroundColor: 'transparent', border: '1px white solid', borderRadius: 5}}>
-                    <div style={{color: 'white', fontStyle: 'italic', margin: 6}}>
+                    {/* <Button variant='outline-light' style={{color: 'white', fontStyle: 'italic', margin: 6}}>
                     <Image height={20} width={20}  src={avatar}
                      style={{filter: 'invert(100%)', marginRight: 10}}  />
 
                       {user.user.email}
 
-                    </div>
-              </div>
+                    </Button> */}
+                    <Button variant={'outline-light'} onClick={() => {
+                    navigate(PROFILE_ROUTE + '/personal')
+                  }}>
+                    <Image height={20} width={20}  src={avatar}
+                     style={{filter: 'invert(100%)', marginRight: 10}}  />
+
+                    {user.user.email}
+                  
+                  </Button>
                   {
                     user.user.role === 'ADMIN'
                     &&
