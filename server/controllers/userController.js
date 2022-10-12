@@ -45,6 +45,17 @@ class UserController {
         const token = generateJwt(req.user.id, req.user.email, req.user.role, req.user.userName)
         return res.json({token})
     }
+
+    async updateUser(req, res, next) {
+        const {userName} = req.body
+
+        console.log(userName)
+
+        const userUpdated = await User.update({userName},{where: {id: req.user.id}})
+        const user = await User.findOne({where:{id: req.user.id}})
+        const token = generateJwt(user.id, user.email, user.role, user.userName)
+        return res.json({token})
+    }
 }
 
 module.exports = new UserController()
