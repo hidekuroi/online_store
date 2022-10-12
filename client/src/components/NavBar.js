@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import {Context} from '../index'
-import {Navbar, Container, Button, Card, Image, Row, Col, Badge} from 'react-bootstrap'
+import {Navbar, Container, Button, Image, Badge} from 'react-bootstrap'
 import Nav from 'react-bootstrap/Nav'
 import { NavLink } from 'react-router-dom'
 import { ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/consts'
@@ -22,34 +22,32 @@ const NavBar = observer(() => {
             <>
               
               <Nav className="ml-auto" style={{color: 'white'}}>
-                      <Button variant={'outline-primary'} style={{marginRight: '10px'}}
-                     onClick={() => {navigate(BASKET_ROUTE)}}>
+                    <NavLink to={BASKET_ROUTE}>
+                      <Button variant={'outline-primary'} style={{marginRight: '10px'}}>
                       <Image height={20} width={20}  src={cart}
                      style={{filter: 'invert(100%)'}}  />
                       <Badge pill bg="danger">{basket.basketDevices.length}</Badge>
                       </Button>
+                    </NavLink>
 
-                    {/* <Button variant='outline-light' style={{color: 'white', fontStyle: 'italic', margin: 6}}>
-                    <Image height={20} width={20}  src={avatar}
-                     style={{filter: 'invert(100%)', marginRight: 10}}  />
+
+                    <NavLink to={PROFILE_ROUTE + '/personal'}>
+                      <Button variant={'outline-light'}>
+                      <Image height={20} width={20}  src={avatar}
+                      style={{filter: 'invert(100%)', marginRight: 10}}  />
 
                       {user.user.email}
-
-                    </Button> */}
-                    <Button variant={'outline-light'} onClick={() => {
-                    navigate(PROFILE_ROUTE + '/personal')
-                  }}>
-                    <Image height={20} width={20}  src={avatar}
-                     style={{filter: 'invert(100%)', marginRight: 10}}  />
-
-                    {user.user.email}
-                  
-                  </Button>
+                    
+                      </Button>
+                    </NavLink>
                   {
                     user.user.role === 'ADMIN'
                     &&
-                    <Button variant={'outline-light'} style={{marginLeft: '10px'}}
-                     onClick={() => {navigate(ADMIN_ROUTE)}}>Админ панель</Button>
+                    <NavLink to={ADMIN_ROUTE}>
+                      <Button variant={'outline-light'} style={{marginLeft: '10px'}}>
+                        Админ панель
+                      </Button>
+                    </NavLink>
                   }
                   <Button variant={'outline-light'} onClick={() => {
                     user.setUser({})
@@ -63,8 +61,16 @@ const NavBar = observer(() => {
             </>
             :
             <Nav className="ml-auto" style={{color: 'white'}}>
-                <Button variant={'outline-light'} onClick={() => navigate(LOGIN_ROUTE)}>Авторизация</Button>
-                <Button style={{marginLeft: 10}} variant='outline-light' onClick={() => navigate(REGISTRATION_ROUTE)}>Регистрация</Button>
+              <NavLink to={LOGIN_ROUTE}>
+                <Button variant={'outline-light'}>
+                  Авторизация
+                </Button>
+              </NavLink>
+              <NavLink to={REGISTRATION_ROUTE}>
+                <Button style={{marginLeft: 10}} variant='outline-light'>
+                  Регистрация
+                </Button>
+              </NavLink>
             </Nav>}
         </Container>
       </Navbar>

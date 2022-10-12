@@ -22,6 +22,10 @@ const CreateDevice = observer(({show, onHide}) => {
         fetchBrands().then(data => {
           device.setBrands(data)
         })
+
+        return () => {
+            setInfo(info.filter(i => i.title.length !== 0))
+        }
       }, [show])
 
     const addInfo = () => {

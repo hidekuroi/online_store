@@ -1,22 +1,24 @@
-import React, { useContext } from 'react'
-import { Card, Col, Button } from 'react-bootstrap'
+import React from 'react'
+import { Card, Col } from 'react-bootstrap'
 import star from '../assets/star.svg'
-import {useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import { DEVICE_ROUTE } from '../utils/consts'
 import BasketButton from './BasketButton'
+import classes from './DeviceItem.module.css'
 
 const DeviceItem = ({device, brand}) => {
 
-    const navigate = useNavigate()
 
   return (
     <Col md={3} className='mt-3'>
-        <Card style={{border: 'light'}}>
-            <Card.Img style={{cursor: 'pointer'}} onClick={() => navigate(`${DEVICE_ROUTE}/${device.id}`)}
-             variant='top' src={process.env.REACT_APP_BASE_URL + device.img}/>
+        <Card style={{border: 'light'}} className={classes.item}>
+            <Link to={`${DEVICE_ROUTE}/${device.id}`}>
+                <Card.Img style={{cursor: 'pointer'}}
+                variant='top' src={process.env.REACT_APP_BASE_URL + device.img}/>
+            </Link>
             <Card.Body>
                 <Card.Text style={{marginBottom: -3, color: 'gray', marginTop: -10}}>{brand}</Card.Text>
-                <Card.Title>{device.name}</Card.Title>
+                <Card.Title><Link style={{textDecoration: 'none', color: 'black'}} to={`${DEVICE_ROUTE}/${device.id}`}>{device.name}</Link></Card.Title>
                 <Card.Text style={{fontWeight: 'bold', fontSize: 24}}>{device.price}$</Card.Text>
                 <Card.Text className='d-flex align-items-center'>
                     {Math.floor(device.rating * 100) / 100}
