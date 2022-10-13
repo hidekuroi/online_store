@@ -1,9 +1,8 @@
 const ApiError = require('../error/ApiError')
 const uuid = require('uuid')
 const path = require('path')
-const {Device, DeviceInfo, Comment, User, Rating} = require('../models/models')
+const {Device, DeviceInfo, Comment, DeviceImage} = require('../models/models')
 const { Op } = require("sequelize");
-const { Sequelize } = require('../db');
 
 class DeviceController {
     async create(req, res, next) {
@@ -24,6 +23,27 @@ class DeviceController {
                     })
                 });
             }
+
+            if(req.files.imgs) {
+                if(req.files.imgs.length) {
+                    for (let i = 0; i < req.files.imgs.length; i++) {
+
+                        const img = req.files.imgs[i]
+                        const fileName = uuid.v4() + '.jpg'
+                        img.mv(path.resolve(__dirname, '..', 'static', fileName))
+                        
+                        const device_img = await DeviceImage.create({deviceId: device.id, img: fileName})
+                    }
+                }
+                else {
+                    const img = req.files.imgs
+                    const fileName = uuid.v4() + '.jpg'
+
+                    img.mv(path.resolve(__dirname, '..', 'static', fileName))
+                        
+                    const device_img = await DeviceImage.create({deviceId: device.id, img: fileName})
+                }
+            }
             
             return res.json(device)
         } catch(e) {
@@ -35,19 +55,40 @@ class DeviceController {
             let {name, price, brandId, typeId, info, id} = req.body
             let img = {}
             let fileName = ''
-            if(req.files) {
+            if(req.files.img) {
                 img = req.files.img
                 fileName = uuid.v4() + '.jpg'
                 img.mv(path.resolve(__dirname, '..', 'static', fileName))
             }
             let device = {}
-            if(req.files){
+            if(req.files.img){
                 device = await Device.update({name, price, brandId, typeId, img: fileName}, {where: {id}})
             }
             else {
                 device = await Device.update({name, price, brandId, typeId}, {where: {id}})
             }
 
+
+            if(req.files.imgs) {
+                if(req.files.imgs.length){
+                    for (let i = 0; i < req.files.imgs.length; i++) {
+
+                        const img = req.files.imgs[i]
+                        const fileName = uuid.v4() + '.jpg'
+                        img.mv(path.resolve(__dirname, '..', 'static', fileName))
+                        
+                        const device_img = await DeviceImage.create({deviceId: id, img: fileName})
+                    }
+                }
+                else {
+                    const img = req.files.imgs
+                    const fileName = uuid.v4() + '.jpg'
+
+                    img.mv(path.resolve(__dirname, '..', 'static', fileName))
+                        
+                    const device_img = await DeviceImage.create({deviceId: id, img: fileName})
+                }
+            }
 
             if (info) {
                 info = JSON.parse(info)
@@ -116,7 +157,7 @@ class DeviceController {
             const device = await Device.findOne(
                 {
                     where: {id},
-                    include: [{model: DeviceInfo, as: 'info'}],
+                    include: [{model: DeviceInfo, as: 'info'}, {model: DeviceImage, as: 'images'}],
                     order: [[{ model: DeviceInfo, as: 'info' }, 'id', 'ASC']]
                 },
             )
@@ -128,6 +169,8 @@ class DeviceController {
     }
     async delete(req, res) {
         const {id} = req.body
+
+        const deviceImages = await DeviceImage.destroy({where: {deviceId: id}})
         const deviceInfo = await DeviceInfo.destroy({where: {deviceId: id}})
         const comments = await Comment.destroy({where: {deviceId: id}})
         const count = await Device.destroy(

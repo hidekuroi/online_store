@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Container, Image, Col, Row, Button, Card, Form, InputGroup, Modal} from 'react-bootstrap'
+import { Container, Image, Col, Row, Button, Card, Form, InputGroup, Modal, Spinner, Carousel} from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import { deleteDevice, fetchOneDevice, updateDevice } from '../api/deviceApi'
 import BasketButton from '../components/BasketButton'
@@ -13,7 +13,15 @@ const DevicePage = observer(() => {
   const [device, setDevice] = useState({info: []})
   const [editMode, setEditMode] = useState(false)
   const [isModal, setIsModal] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [file, setFile] = useState(null)
+  const [additionalFiles, setAdditionalFiles] = useState(null)
+
+  const [index, setIndex] = useState(0);
+  const handleSelect = (selectedIndex, e) => {
+    setIndex(selectedIndex);
+  };
+
   const {id} = useParams()
   const {user} = useContext(Context)
   const navigate = useNavigate()
@@ -22,6 +30,7 @@ const DevicePage = observer(() => {
     if(id) fetchOneDevice(id).then(data => {
       data.info.forEach((i) => i.toDelete = false)
       setDevice(data)
+      setIsLoading(false)
     })
   }, [])
 
@@ -42,6 +51,10 @@ const DevicePage = observer(() => {
     })
   }
 
+  const selectAdditionalFiles = (e) => {
+    setAdditionalFiles(e.target.files)
+}
+
   const updateDev = (mode) => {
     if(!mode) {
       let newDev = {...device}
@@ -54,6 +67,10 @@ const DevicePage = observer(() => {
             formData.append('img', file)
             formData.append('info', JSON.stringify(newDev.info))
 
+            for (let i = 0; i < additionalFiles.length; i++) {
+              formData.append("imgs", additionalFiles[i])
+            }
+
       updateDevice(formData).then(data => {
         setTimeout(() => {
           fetchOneDevice(id).then(data => setDevice(data))
@@ -62,16 +79,64 @@ const DevicePage = observer(() => {
     }
   }
 
+
+  if(isLoading) return(<Spinner animation="grow" />)
+
   return (
     <Container className="mt-3">
       {device ? <>
       <Row>
       <Col md={4}>
+        {device.images.length === 0 
+        ?
+        <>
         <Image
-          style={{scale: '100%'}}
+          style={{scale: '100%', maxHeight: 800, border: '1px solid lightgray', borderRadius: '4px'}}
         fluid
          src={process.env.REACT_APP_BASE_URL + device.img} />
-         {editMode && <Form.Control onChange={selectFile} className="mt-2 mb-2" type='file'/>}
+         {editMode && 
+          <>
+            <div>Главное изображение: <Form.Control onChange={selectFile} className="mt-2 mb-2" type='file'/></div>
+            <div>Дополнительные изображения: <Form.Control multiple onChange={selectAdditionalFiles} className='mt-2 mb-2' type='file'/></div>
+          </>
+          }
+         </>
+         :
+         <>
+          <Carousel style={{border: '1px solid lightgray', borderRadius: '4px'}}
+           interval={null} activeIndex={index} onSelect={handleSelect}>
+
+            <Carousel.Item className='justify-content-center'>
+              <Image
+                fluid
+                style={{scale: '100%', maxHeight: 650}}
+                className="d-block m-auto"
+                src={process.env.REACT_APP_BASE_URL + device.img}
+                alt="First slide"
+              />
+            </Carousel.Item>
+
+            {device.images.map((img) => {
+              return <Carousel.Item key={img.id}
+              className='justify-content-center'>
+              <Image
+                fluid
+                style={{scale: '100%', maxHeight: 650}}
+                className="d-block m-auto"
+                src={process.env.REACT_APP_BASE_URL + img.img}
+                alt="First slide"
+              />
+            </Carousel.Item>
+            })}
+          </Carousel>
+          {editMode && 
+          <>
+            <div>Главное изображение: <Form.Control onChange={selectFile} className="mt-2 mb-2" type='file'/></div>
+            <div>Дополнительные изображения: <Form.Control multiple onChange={selectAdditionalFiles} className='mt-2 mb-2' type='file'/></div>
+          </>
+          }
+         </>
+         }
       </Col>
       <Col md={4}>
         <Row className="d-flex flex-column align-items-center justify-content-center">

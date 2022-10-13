@@ -46,7 +46,6 @@ export const deleteDevice = async (id) => {
     return response.data
 }
 export const updateDevice = async (device) => {
-    console.log(device)
     const response = await $authHost.put('api/device', device)
     return response.data
 }

@@ -24,7 +24,7 @@ const start = async () => {
     try{
         await sequlize.authenticate()
         await sequlize.sync()
-        app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+        app.listen(PORT, () => console.log(`\n \n Server started on port ${PORT} \n \n`))
     } catch(e) {
         console.log(e)
     }

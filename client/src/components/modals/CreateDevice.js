@@ -14,6 +14,7 @@ const CreateDevice = observer(({show, onHide}) => {
     const [name, setName] = useState('')
     const [price, setPrice] = useState('')
     const [file, setFile] = useState(null)
+    const [additionalFiles, setAdditionalFiles] = useState(null)
 
     useEffect(() => {
         fetchTypes().then(data => {
@@ -40,6 +41,10 @@ const CreateDevice = observer(({show, onHide}) => {
         setInfo(info.map(i => i.number === number ? {...i, [key]: value} : i))
     }
 
+    const selectAdditionalFiles = (e) => {
+        setAdditionalFiles(e.target.files)
+    }
+
     const selectFile = (e) => {
         setFile(e.target.files[0])
     }
@@ -53,7 +58,11 @@ const CreateDevice = observer(({show, onHide}) => {
             formData.append('typeId', device.selectedType.id)
             formData.append('img', file)
             formData.append('info', JSON.stringify(info))
-            
+
+            for (let i = 0; i < additionalFiles.length; i++) {
+                formData.append("imgs", additionalFiles[i])
+            }
+                       
             createDevice(formData).then(data => console.log('created'))
 
             setShowSuccess(true)
@@ -115,6 +124,7 @@ const CreateDevice = observer(({show, onHide}) => {
              className="mt-2 mb-2" placeholder={'Стоимость устройства'} type='number'/>
 
             <div>Изображение: <Form.Control onChange={selectFile} className="mt-2 mb-2" type='file'/></div>
+            <div>Дополнительные изображения: <Form.Control multiple onChange={selectAdditionalFiles} className='mt-2 mb-2' type='file'/></div>
 
             <hr />
 

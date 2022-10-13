@@ -10,7 +10,6 @@ const DeleteType = observer(({show, onHide}) => {
   const [showErrorAlert, setShowErrorAlert] = useState(false)
 
   const onDeleteType = () => {
-    console.log('worki4')
     if(device.selectedType.id) {
       deleteType(JSON.stringify(device.selectedType.id)).then(data => {
         setShowAlert(true)

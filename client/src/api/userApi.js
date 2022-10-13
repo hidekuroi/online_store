@@ -17,7 +17,6 @@ export const check = async () => {
     return jwt_decode(response.data.token);
 }
 export const updateUser = async (userName) => {
-    console.log(userName)
     const response = await $authHost.put('/api/user/update', {userName})
     localStorage.setItem('token', response.data.token)
     return jwt_decode(response.data.token)

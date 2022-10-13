@@ -58,7 +58,6 @@ class CommentController {
         let comments
 
         if(userId === req.user.id){
-            console.log('DIXONDIXON')
             comments = await Comment.findAll({where: {userId}})
         }
 

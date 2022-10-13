@@ -49,6 +49,11 @@ const DeviceInfo = sequelize.define('device_info', {
     description: {type: DataTypes.STRING, allowNull: false}
 })
 
+const DeviceImage = sequelize.define('device_image', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    img: {type: DataTypes.STRING, allowNull: false}
+})
+
 const Comment = sequelize.define('comment', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     body: {type: DataTypes.TEXT, allowNull: false}
@@ -94,6 +99,12 @@ Comment.belongsTo(Device)
 User.hasMany(Comment)
 Comment.belongsTo(User)
 
+Device.hasMany(DeviceImage)
+DeviceImage.belongsTo(Device)
+
+Device.hasMany(DeviceImage, {as: 'images'})
+DeviceImage.belongsTo(Device)
+
 module.exports = {
     User, 
     Basket,
@@ -104,5 +115,6 @@ module.exports = {
     Brand,
     Rating,
     TypeBrand,
-    Comment
+    Comment,
+    DeviceImage
 }
