@@ -21,7 +21,7 @@ const Basket = observer(() => {
     })
   }, [])
 
-  const deleteBasketItem = (id) => {
+  const deleteBasketItem = (id: number) => {
     deleteBasketDevice(id).then(data => {
       getBasketDevices().then(data => {
         basket.setBasketDevices(data.devices)
@@ -44,7 +44,7 @@ const Basket = observer(() => {
 
               <BasketItem d={d}
               brand={device.brands.map((b) => b.id === d.deviceInfo.brandId && b.name)}
-              deleteBasketItem={(id) => deleteBasketItem(id)} />
+              deleteBasketItem={(id: number) => deleteBasketItem(id)} />
               
               )}
             </ListGroup>

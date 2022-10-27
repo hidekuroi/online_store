@@ -1,8 +1,20 @@
+import { deviceTypeType, brandType, minDeviceDataType, commentType } from './../types/types';
 import {makeAutoObservable} from 'mobx'
 
 export default class DeviceStore {
+    private _selectedType: deviceTypeType | null
+    private _selectedBrand: brandType[] | []
+    private _types: deviceTypeType[] | []
+    private _brands: brandType[] | []
+    private _devices: minDeviceDataType[] | []
+    private _comments: commentType[] | []
+    
+    private _page: number
+    private _totalCount: number
+    private _limit: number
+
     constructor(){
-        this._selectedType = {}
+        this._selectedType = null
         this._selectedBrand = []
         this._types = []
         this._brands = []
@@ -17,37 +29,37 @@ export default class DeviceStore {
         makeAutoObservable(this)
     }
 
-    setTypes(types) {
+    setTypes(types: deviceTypeType[]) {
         this._types = types
     }
-    setBrands(brands) {
+    setBrands(brands: brandType[]) {
         this._brands = brands
     }
-    setDevices(devices) {
+    setDevices(devices: minDeviceDataType[]) {
         this._devices = devices
     }
-    setSelectedType(type) {
+    setSelectedType(type: deviceTypeType | null) {
         this.setPage(1)
         this._selectedType = type
     }
-    setSelectedBrand(brand) {
+    setSelectedBrand(brand: brandType[]) {
         this.setPage(1)
         this._selectedBrand = brand
     }
-    pushSelectedBrand(brand) {
+    pushSelectedBrand(brand: brandType) {
         this.setPage(1)
         this._selectedBrand = [...this._selectedBrand, brand]
     }
-    setComments(comments) {
+    setComments(comments: commentType[]) {
         this._comments = comments
     }
-    setPage(page) {
+    setPage(page: number) {
         this._page = page
     }
-    setTotalCount(count) {
+    setTotalCount(count: number) {
         this._totalCount = count
     }
-    setLimit(limit) {
+    setLimit(limit: number) {
         this._limit = limit
     }
 

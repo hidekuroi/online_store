@@ -19,13 +19,21 @@ const MyComments = observer(() => {
     
   return (
     <>
-            {comments.map((c) => 
-                <Card className='mb-3' key={c.id}>
+            {comments.map((c) => {
+                const date = c.createdAt.split('T')
+                const serverTime = date[1].split('.')
+                let hour = serverTime[0].split(':')
+                hour[0] = (Number(hour[0]) + 3).toString()
+                let localTime = hour.toString()
+                localTime = localTime.replaceAll(',', ':')
+
+                return <Card className='mb-3' key={c.id}>
                     <Card.Header className='d-flex' onClick={() => navigate(`/device/${c.deviceId}`)}
                      style={{backgroundColor: 'lightcyan', cursor: 'pointer'}}>
                         <Col>
                             <h5>{user.user.userName}</h5>
-                            <i>{c.createdAt}</i>
+                            <i>{date[0]}</i>
+                            <i>{`\n | \n${localTime}`}</i>
                         </Col>
                          <Col className='d-flex justify-content-end'>
                             <Button onClick={() => console.log('delete')}
@@ -40,6 +48,7 @@ const MyComments = observer(() => {
                         </Card.Text>
                     </Card.Body>
                 </Card>
+            }
             )}
             </>
   )

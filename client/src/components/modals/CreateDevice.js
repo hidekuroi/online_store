@@ -50,19 +50,23 @@ const CreateDevice = observer(({show, onHide}) => {
     }
 
     const addDevice = () => {
-        if(name && price && device.selectedBrand.id && device.selectedType.id, file) {
+        console.log(name && price && device.selectedBrand.id && device.selectedType?.id, file)
+        if(name && price && device.selectedBrand.id && device.selectedType?.id && file) {
+            console.log(name && price && device.selectedBrand.id && device.selectedType?.id && file)
             const formData = new FormData()
             formData.append('name', name)
             formData.append('price', price)
             formData.append('brandId', device.selectedBrand.id)
-            formData.append('typeId', device.selectedType.id)
+            formData.append('typeId', device.selectedType?.id)
             formData.append('img', file)
             formData.append('info', JSON.stringify(info))
 
-            for (let i = 0; i < additionalFiles.length; i++) {
-                formData.append("imgs", additionalFiles[i])
+            if(additionalFiles) {
+                for (let i = 0; i < additionalFiles.length; i++) {
+                    formData.append("imgs", additionalFiles[i])
+                }
             }
-                       
+            
             createDevice(formData).then(data => console.log('created'))
 
             setShowSuccess(true)
@@ -95,7 +99,7 @@ const CreateDevice = observer(({show, onHide}) => {
 
         <Dropdown className='mt-2 mb-2'>
             <Dropdown.Toggle variant="outline-primary">
-                {device.selectedType.name || "Выберите тип"}
+                {device.selectedType?.name || "Выберите тип"}
             </Dropdown.Toggle>
             <Dropdown.Menu>
                 {device.types.map(type =>

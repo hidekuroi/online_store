@@ -1,6 +1,11 @@
 import {makeAutoObservable} from 'mobx'
+import { basketDeviceType } from '../types/types'
 
 export default class BasketStore {
+    private _totalCount: number
+    private _basketDevices: basketDeviceType[]
+    private _totalPrice: number
+
     constructor(){
         this._totalCount = 0
         this._basketDevices = []
@@ -8,13 +13,13 @@ export default class BasketStore {
         makeAutoObservable(this)
     }
 
-    setTotalCount(count) {
+    setTotalCount(count: number) {
         this._totalCount = count
     }
-    setBasketDevices(devices) {
+    setBasketDevices(devices:basketDeviceType[]) {
         this._basketDevices = devices
     }
-    setTotalPrice(price) {
+    setTotalPrice(price: number) {
         this._totalPrice = price
     }
 

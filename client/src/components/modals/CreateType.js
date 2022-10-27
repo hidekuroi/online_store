@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Button, Form, Alert, Row } from 'react-bootstrap'
+import { Modal, Button, Form, Alert } from 'react-bootstrap'
 import { createType } from '../../api/deviceApi'
 
 const CreateType = ({show, onHide}) => {

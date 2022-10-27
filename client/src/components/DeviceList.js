@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import React, { useContext } from 'react'
 import {Context} from '../index'
 import {Row} from 'react-bootstrap'
-import DeviceItem from './DeviceItem'
+import DeviceItem from './DeviceItem.tsx'
 
 const DeviceList = observer(() => {
     const {device} = useContext(Context)

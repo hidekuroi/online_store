@@ -5,7 +5,11 @@ import { addComment, getComments, removeComment } from '../api/commentsApi'
 import { Context } from '../index'
 import TrashIcon from '../assets/trash3.svg'
 
-const Comments = observer(({deviceId}) => {
+type CommentsProps = {
+    deviceId: number
+}
+
+const Comments = observer(({deviceId}: CommentsProps) => {
     const {device} = useContext(Context)
     const {user} = useContext(Context)
     const [value, setValue] = useState('')
@@ -18,7 +22,7 @@ const Comments = observer(({deviceId}) => {
         setValue('')
     }
 
-    const deleteComment = (deviceId, commentId) => {
+    const deleteComment = (deviceId: number, commentId: number) => {
         removeComment(deviceId, commentId).then(data => {
             setTimeout(() => {
                 getComments(deviceId).then(d => device.setComments(d))   
@@ -30,7 +34,7 @@ const Comments = observer(({deviceId}) => {
         getComments(deviceId).then(data => {
             device.setComments(data)
         })
-    }, [])
+    }, [device, deviceId])
     
 
   return (
@@ -47,12 +51,20 @@ const Comments = observer(({deviceId}) => {
         {device.comments.length 
             ?
             <>
-            {device.comments.map((c) => 
-                <Card className='mt-3' key={c.comment.id}>
+            {device.comments.map((c) => {
+                const date = c.comment.createdAt.split('T')
+                const serverTime = date[1].split('.')
+                let hour = serverTime[0].split(':')
+                hour[0] = (Number(hour[0]) + 3).toString()
+                let localTime = hour.toString()
+                localTime = localTime.replaceAll(',', ':')
+
+                return <Card className='mt-3' key={c.comment.id}>
                     <Card.Header className='d-flex' style={{backgroundColor: c.comment.userId === user.user.id ? 'lightcyan' : ''}}>
                         <Col>
                             <h5>{c.userName}</h5>
-                            <i>{c.comment.createdAt}</i>
+                            <i>{date[0]}</i>
+                            <i>{`\n | \n${localTime}`}</i>
                         </Col>
                         {(c.comment.userId === user.user.id || user.user.role === 'ADMIN') && <Col className='d-flex justify-content-end'>
                             <Button onClick={() => deleteComment(c.comment.deviceId, c.comment.id)}
@@ -67,6 +79,7 @@ const Comments = observer(({deviceId}) => {
                         </Card.Text>
                     </Card.Body>
                 </Card>
+            }
             )}
             </>
             :

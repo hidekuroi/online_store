@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Button, Form, Alert, Row } from 'react-bootstrap'
+import { Modal, Button, Form, Alert } from 'react-bootstrap'
 import { createBrand } from '../../api/deviceApi'
 
 const CreateBrand = ({show, onHide}) => {

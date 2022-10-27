@@ -5,9 +5,15 @@ import BasketStore from './store/BasketStore';
 import DeviceStore from './store/DeviceStore';
 import UserStore from './store/UserStore';
 
-export const Context = createContext(null)
+type StoreType = {
+  user: UserStore,
+  device: DeviceStore,
+  basket: BasketStore
+}
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+export const Context = createContext<StoreType>(null as unknown as StoreType)
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <Context.Provider value={{
     user: new UserStore(),

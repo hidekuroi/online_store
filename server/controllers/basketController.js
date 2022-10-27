@@ -23,13 +23,12 @@ class BasketController {
 
         for (let i = 0; i < basket_devices.length; i++) {        
                 const device = await Device.findOne({where: {id: basket_devices[i].deviceId}})
-
-                totalPrice = totalPrice + device.price * basket_devices[i].amount
                 
                 if(!device) {
                     devices.push({basketDeviceId: basket_devices[i].id, deviceInfo: {id: -1, name: "Данное устройство удалено", price: 0, rating: 0, brandId: 0, typeId: 0, img: 'bad.jpg', amount: 0}})
                 }
                 else{
+                    totalPrice = totalPrice + device.price * basket_devices[i].amount
                     devices.push({basketDeviceId: basket_devices[i].id, deviceInfo: device, amount: basket_devices[i].amount})
                 }
             }

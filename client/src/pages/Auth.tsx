@@ -17,7 +17,7 @@ const Auth = observer(() => {
     const [show, setShow] = useState(false)
 
 
-    const click = async (e) => {
+    const click = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         e.stopPropagation()
         try {
@@ -39,7 +39,7 @@ const Auth = observer(() => {
             user.setUser(data)
             user.setIsAuth(true)
             navigate('/')
-        }catch(err) {
+        }catch(err: any) {
             alert(err.response.data.message)
         }
         
@@ -67,7 +67,7 @@ const Auth = observer(() => {
                     <Alert.Heading>Введите все данные</Alert.Heading>
                 </Alert>
 
-                <Button type='sumbit' variant="outline-primary" className="mt-3 align-self-center"
+                <Button type='submit' variant="outline-primary" className="mt-3 align-self-center"
                     
                 >
                     {isLogin ? 'Войти' : 'Зарегистрироваться'}

@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
-import React, { useContext, useEffect, useState } from 'react'
-import { Modal, Button, Form, Alert, Dropdown } from 'react-bootstrap'
+import React, { useContext, useState } from 'react'
+import { Modal, Button, Form, Alert } from 'react-bootstrap'
 import { deleteDevice, fetchDevices } from '../../api/deviceApi'
 import { Context } from '../../index'
 

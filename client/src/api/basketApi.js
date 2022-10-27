@@ -1,4 +1,4 @@
-import { $authHost, $host } from "./APIindex";
+import { $authHost } from "./APIindex";
 
 
 export const getBasketDevices = async () => {

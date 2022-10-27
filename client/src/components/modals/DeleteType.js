@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Modal, Button, Form, Alert, Dropdown } from 'react-bootstrap'
 import { deleteType, fetchTypes } from '../../api/deviceApi'
 import { Context } from '../../index'
@@ -10,13 +10,13 @@ const DeleteType = observer(({show, onHide}) => {
   const [showErrorAlert, setShowErrorAlert] = useState(false)
 
   const onDeleteType = () => {
-    if(device.selectedType.id) {
-      deleteType(JSON.stringify(device.selectedType.id)).then(data => {
+    if(device.selectedType?.id) {
+      deleteType(JSON.stringify(device.selectedType?.id)).then(data => {
         setShowAlert(true)
         setTimeout(() => {
           setShowAlert(false)
         }, 1500);
-        device.setSelectedType({})
+        device.setSelectedType(null)
 
         fetchTypes().then(data => {
             device.setTypes(data)
@@ -54,7 +54,7 @@ const DeleteType = observer(({show, onHide}) => {
       <Form>
         <Dropdown className='mt-2 mb-2'>
             <Dropdown.Toggle variant="outline-primary">
-                {device.selectedType.name || "Выберите тип"}
+                {device.selectedType?.name || "Выберите тип"}
             </Dropdown.Toggle>
             <Dropdown.Menu>
                 {device.types.map(type =>

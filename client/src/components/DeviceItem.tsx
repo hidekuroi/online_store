@@ -5,8 +5,14 @@ import {Link} from 'react-router-dom'
 import { DEVICE_ROUTE } from '../utils/consts'
 import BasketButton from './BasketButton'
 import classes from './DeviceItem.module.css'
+import { minDeviceDataType } from '../types/types'
 
-const DeviceItem = ({device, brand}) => {
+type DeviceItemPropsType = {
+    device: minDeviceDataType,
+    brand: string
+}
+
+const DeviceItem = ({device, brand}: DeviceItemPropsType) => {
 
 
   return (
@@ -24,6 +30,7 @@ const DeviceItem = ({device, brand}) => {
                     {Math.floor(device.rating * 100) / 100}
                     <img src={star} alt="Rating" width="14" height="14" />
                 </Card.Text>
+                {/*@ts-ignore*/}
                 <BasketButton deviceId={device.id}/>
             </Card.Body>
         </Card>

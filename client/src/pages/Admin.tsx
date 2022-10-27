@@ -10,18 +10,18 @@ import DeleteDevice from '../components/modals/DeleteDevice'
 
 function Admin() {
   const {device} = useContext(Context)
-  const [typeVisible, setTypeVisible] = useState(false)
-  const [brandVisible, setBrandVisible] = useState(false)
-  const [deviceVisible, setDeviceVisible] = useState(false)
+  const [typeVisible, setTypeVisible] = useState<boolean>(false)
+  const [brandVisible, setBrandVisible] = useState<boolean>(false)
+  const [deviceVisible, setDeviceVisible] = useState<boolean>(false)
 
-  const [deleteBrandVisible, setDeleteBrandVisible] = useState(false)
-  const [deleteTypeVisible, setDeleteTypeVisible] = useState(false)
-  const [deleteDeviceVisible, setDeleteDeviceVisible] = useState(false)
+  const [deleteBrandVisible, setDeleteBrandVisible] = useState<boolean>(false)
+  const [deleteTypeVisible, setDeleteTypeVisible] = useState<boolean>(false)
+  const [deleteDeviceVisible, setDeleteDeviceVisible] = useState<boolean>(false)
 
   useEffect(() => {
     return () => {
-      device.setSelectedBrand({})
-      device.setSelectedType({})
+      device.setSelectedBrand([])
+      device.setSelectedType(null)
     }
   }, [])
 
@@ -72,10 +72,13 @@ function Admin() {
       </Col>
       <CreateType show={typeVisible} onHide={() => setTypeVisible(false)}/>
       <CreateBrand show={brandVisible} onHide={() => setBrandVisible(false)}/>
+      {/* @ts-ignore */}
       <CreateDevice show={deviceVisible} onHide={() => setDeviceVisible(false)}/>
-
+      {/* @ts-ignore */}
       <DeleteBrand show={deleteBrandVisible} onHide={() => setDeleteBrandVisible(false)} />
+      {/* @ts-ignore */}
       <DeleteType show={deleteTypeVisible} onHide={() => setDeleteTypeVisible(false)} />
+      {/* @ts-ignore */}
       <DeleteDevice show={deleteDeviceVisible} onHide={() => setDeleteDeviceVisible(false)} />
     </Container>
   )

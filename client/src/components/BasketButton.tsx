@@ -4,9 +4,14 @@ import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { addToBasket, getBasketDevices } from '../api/basketApi'
 import {Context} from '../index'
+import { basketDeviceType } from '../types/types'
 
-const BasketButton = observer(({deviceId}) => {
-    const [isAdded, setIsAdded] = useState(false)
+type BasketButtonPropsType = {
+  deviceId: number
+}
+
+const BasketButton = observer(({deviceId}: BasketButtonPropsType) => {
+    const [isAdded, setIsAdded] = useState<boolean>(false)
     const {basket} = useContext(Context)
     const {user} = useContext(Context)
     const navigate = useNavigate()
@@ -21,12 +26,12 @@ const BasketButton = observer(({deviceId}) => {
     }
 
     useEffect(() => {
-      if(basket.basketDevices.length > 0) basket.basketDevices.map(d => d.deviceInfo.id === deviceId && setIsAdded(true))
+      if(basket.basketDevices.length > 0) basket.basketDevices.map((d: basketDeviceType) => d.deviceInfo.id === deviceId && setIsAdded(true))
     }, [deviceId])
     
 
     useEffect(() => {
-        if(basket.basketDevices.length > 0) basket.basketDevices.map(d => d.deviceInfo.id === deviceId && setIsAdded(true))
+        if(basket.basketDevices.length > 0) basket.basketDevices.map((d: basketDeviceType) => d.deviceInfo.id === deviceId && setIsAdded(true))
     }, [basket.basketDevices])
     
 

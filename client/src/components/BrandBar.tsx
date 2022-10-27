@@ -1,27 +1,28 @@
 import { observer } from 'mobx-react-lite'
 import React, { useContext } from 'react'
-import { Row, Card, Col, Form } from 'react-bootstrap'
+import { Row, Card, Form } from 'react-bootstrap'
 import {Context} from '../index'
+import { brandType } from '../types/types'
 
 const BrandBar = observer(() => {
     const {device} = useContext(Context)
 
-    const selectBrand = (brand) => {
+    const selectBrand = (brand: brandType) => {
       //if(brand !== device.selectedBrand) {
         //device.pushSelectedBrand(brand)
       //} else {
        // device.setSelectedBrand({})
      // }
-      let count = 0
+     let count = 0
 
-      for (let k = 0; k < device.selectedBrand.length; k++) {
-        if(brand !== device.selectedBrand[k]) count = count
-        else count++      
-      }
+     for (let k = 0; k < device.selectedBrand.length; k++) {
+       if(brand !== device.selectedBrand[k]) count = count
+       else count++      
+     }
 
-      if(count === 0) device.pushSelectedBrand(brand)
-      else device.setSelectedBrand(device.selectedBrand.filter(br => br !== brand))
-    }
+     if(count === 0) device.pushSelectedBrand(brand)
+     else device.setSelectedBrand(device.selectedBrand.filter(br => br !== brand))
+   }
 
   return (
     <Row className="d-inline-flex">
@@ -38,7 +39,7 @@ const BrandBar = observer(() => {
 
             return <Form.Check 
             type={'checkbox'}
-            id={brand.id}
+            id={`${brand.id}`}
             label={brand.name}
             checked={isChecked}
             onChange={() => selectBrand(brand)}

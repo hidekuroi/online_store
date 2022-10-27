@@ -24,8 +24,8 @@ class DeviceController {
                 });
             }
 
-            if(req.files.imgs) {
-                if(req.files.imgs.length) {
+            if(req.files?.imgs) {
+                if(req.files?.imgs.length) {
                     for (let i = 0; i < req.files.imgs.length; i++) {
 
                         const img = req.files.imgs[i]
@@ -51,44 +51,47 @@ class DeviceController {
         }  
     }
     async updateDevice(req, res, next) {
+        console.log(req.files?.img)
         try {
             let {name, price, brandId, typeId, info, id} = req.body
             let img = {}
             let fileName = ''
-            if(req.files.img) {
-                img = req.files.img
-                fileName = uuid.v4() + '.jpg'
-                img.mv(path.resolve(__dirname, '..', 'static', fileName))
+            if(req.files) {
+                if(req.files?.img) {
+                    img = req.files.img
+                    fileName = uuid.v4() + '.jpg'
+                    img.mv(path.resolve(__dirname, '..', 'static', fileName))
+                }
             }
-            let device = {}
-            if(req.files.img){
+            let device = {} 
+            if(req.files?.img){
                 device = await Device.update({name, price, brandId, typeId, img: fileName}, {where: {id}})
             }
             else {
                 device = await Device.update({name, price, brandId, typeId}, {where: {id}})
             }
 
+                if(req.files?.imgs) {
+                    if(req.files.imgs.length){
+                        for (let i = 0; i < req.files.imgs.length; i++) {
 
-            if(req.files.imgs) {
-                if(req.files.imgs.length){
-                    for (let i = 0; i < req.files.imgs.length; i++) {
-
-                        const img = req.files.imgs[i]
+                            const img = req.files.imgs[i]
+                            const fileName = uuid.v4() + '.jpg'
+                            img.mv(path.resolve(__dirname, '..', 'static', fileName))
+                            
+                            const device_img = await DeviceImage.create({deviceId: id, img: fileName})
+                        }
+                    }
+                    else {
+                        const img = req.files.imgs
                         const fileName = uuid.v4() + '.jpg'
+
                         img.mv(path.resolve(__dirname, '..', 'static', fileName))
-                        
+                            
                         const device_img = await DeviceImage.create({deviceId: id, img: fileName})
                     }
                 }
-                else {
-                    const img = req.files.imgs
-                    const fileName = uuid.v4() + '.jpg'
-
-                    img.mv(path.resolve(__dirname, '..', 'static', fileName))
-                        
-                    const device_img = await DeviceImage.create({deviceId: id, img: fileName})
-                }
-            }
+            
 
             if (info) {
                 info = JSON.parse(info)

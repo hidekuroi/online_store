@@ -8,6 +8,7 @@ import TypeBar from '../components/TypeBar'
 import { fetchBrands, fetchDevices, fetchTypes } from '../api/deviceApi'
 import Pages from '../components/Pages'
 import { getBasketDevices } from '../api/basketApi'
+import { useSearchParams } from 'react-router-dom'
 
 const Shop = observer(() => {
   const [searchValue, setSearchValue] = useState('')
@@ -15,13 +16,14 @@ const Shop = observer(() => {
   const {device} = useContext(Context)
   const {basket} = useContext(Context)
   const {user} = useContext(Context)
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const search = (e) => {
+  const search = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     e.stopPropagation()
 
-    device.setSelectedBrand({})
-    device.setSelectedType({})
+    device.setSelectedBrand([])
+    device.setSelectedType(null)
 
     fetchDevices(null, null, device.page, device.limit, searchValue).then(data => {
       device.setDevices(data.rows)
@@ -30,6 +32,11 @@ const Shop = observer(() => {
   }
 
   useEffect(() => {
+
+    //const parsed = queryString.parse(navigate.location)
+    const params = Object.fromEntries(Array.from(searchParams))
+    device.setPage(Number(params.page) ? Number(params.page) : 1)
+
     fetchTypes().then(data => {
       device.setTypes(data)
     })
@@ -43,20 +50,23 @@ const Shop = observer(() => {
 
     return () => {
       device.setSelectedBrand([])
-      device.setSelectedType([])
+      device.setSelectedType(null)
     }
     
-  }, [])
+  }, [device])
 
   useEffect(() => {
+
+    setSearchParams({page: device.page.toString()})
+
     let brandIds = []
     for (let i = 0; i < device.selectedBrand.length; i++) {
       brandIds.push(device.selectedBrand[i].id)      
     }
 
-    if (brandIds.length === 0) brandIds = null
+    if (brandIds.length === 0) brandIds = []
 
-      fetchDevices(device.selectedType.id, brandIds, device.page, device.limit, searchValue).then(data => {
+      fetchDevices(device.selectedType?.id, brandIds, device.page, device.limit, searchValue).then(data => {
         device.setDevices(data.rows)
         device.setTotalCount(data.count)
       })
@@ -64,6 +74,14 @@ const Shop = observer(() => {
         basket.setBasketDevices(data.devices)
       })}
   }, [device.page, device.selectedBrand, device.selectedType])
+
+  useEffect(() => {
+    
+  console.log('changed')
+    //device.setPage()
+    
+  }, [searchParams])
+  
   
   
 
@@ -89,8 +107,10 @@ const Shop = observer(() => {
                 </InputGroup>
               </Form>
 
+                <Pages />
                 <DeviceList />
                 <Pages />
+
             </Col>
         </Row>
     </Container>

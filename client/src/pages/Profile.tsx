@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import { Container, Col, Card, ListGroup } from 'react-bootstrap'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import MyComments from '../components/ProfileComponents/MyComments'
 import Personal from '../components/ProfileComponents/Personal'
 import { PROFILE_ROUTE } from '../utils/consts'
@@ -17,15 +17,15 @@ const Profile = observer(() => {
             <Card>
             <Card.Header>Данные</Card.Header>
             <ListGroup>
-                <ListGroup.Item style={{cursor: 'pointer'}} active={param == 'personal'}
+                <ListGroup.Item style={{cursor: 'pointer'}} active={param === 'personal'}
                 onClick={() => navigate(`${PROFILE_ROUTE}/personal`)}>
                     Личные данные
                 </ListGroup.Item>
-                <ListGroup.Item style={{cursor: 'pointer'}} active={param == 'orders'}
+                <ListGroup.Item style={{cursor: 'pointer'}} active={param === 'orders'}
                 onClick={() => navigate(`${PROFILE_ROUTE}/orders`)}>
                     Мои заказы
                 </ListGroup.Item>
-                <ListGroup.Item style={{cursor: 'pointer'}} active={param == 'comments'}
+                <ListGroup.Item style={{cursor: 'pointer'}} active={param === 'comments'}
                 onClick={() => navigate(`${PROFILE_ROUTE}/comments`)}>
                     Мои отзывы
                 </ListGroup.Item>

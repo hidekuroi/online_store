@@ -1,10 +1,19 @@
 import { Rating } from '@mui/material'
 import { observer } from 'mobx-react-lite'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { addRating, getGivenRating } from '../api/ratingApi'
 import star from '../assets/star.svg'
+import { Context } from '../index'
 
-const RatingComponent = observer(({deviceId, overallRating}) => {
+type RatingProps = {
+  deviceId: number,
+  overallRating: number
+}
+
+const RatingComponent = observer(({deviceId, overallRating}: RatingProps) => {
+    const {user} = useContext(Context)
+    const navigate = useNavigate()
     const [givenRating, setGivenRating] = useState(0)
     const [overallRatingValue, setOverallRatingValue] = useState(overallRating)
 
@@ -24,11 +33,16 @@ const RatingComponent = observer(({deviceId, overallRating}) => {
 
     }, [])
 
-    const add = (ratingValue) => {
-      setGivenRating(ratingValue)
-      addRating(deviceId, ratingValue).then(data => {
-        setOverallRatingValue(data)
-      })
+    const add = (ratingValue: number) => {
+      if(user.isAuth){
+        setGivenRating(ratingValue)
+        addRating(deviceId, ratingValue).then(data => {
+          setOverallRatingValue(data)
+        })
+      }
+      else {
+        navigate('/login')
+      }
     }
     
 
@@ -43,7 +57,7 @@ const RatingComponent = observer(({deviceId, overallRating}) => {
         name="simple-controlled"
         value={givenRating}
         onChange={(event, newValue) => {
-          add(newValue);
+          add(Number(newValue));
         }}
       />
   </>)
