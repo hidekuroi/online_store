@@ -3,21 +3,22 @@ import React, { useContext, useState } from 'react'
 import { Modal, Button, Form, Alert, Dropdown } from 'react-bootstrap'
 import { deleteBrand, fetchBrands } from '../../api/deviceApi'
 import { Context } from '../../index'
+import { ModalPropsType } from '../../pages/Admin'
 
-const DeleteBrand = observer(({show, onHide}) => {
+const DeleteBrand = observer(({show, onHide}: ModalPropsType) => {
   const {device} = useContext(Context)
   const [showAlert, setShowAlert] = useState(false)
   const [showErrorAlert, setShowErrorAlert] = useState(false)
     
 
   const onDeleteBrand = () => {
-    if(device.selectedBrand.id) {
-      deleteBrand(JSON.stringify(device.selectedBrand.id)).then(data => {
+    if(device.selectedBrand[0]?.id) {
+      deleteBrand(JSON.stringify(device.selectedBrand[0]?.id)).then(data => {
         setShowAlert(true)
         setTimeout(() => {
           setShowAlert(false)
         }, 1500);
-        device.setSelectedBrand({})
+        device.setSelectedBrand([])
 
         fetchBrands().then(data => {
             device.setBrands(data)
@@ -55,11 +56,11 @@ const DeleteBrand = observer(({show, onHide}) => {
       <Form>
         <Dropdown className='mt-2 mb-2'>
             <Dropdown.Toggle variant="outline-primary">
-                {device.selectedBrand.name || "Выберите брэнд"}
+                {device.selectedBrand[0]?.name || "Выберите брэнд"}
             </Dropdown.Toggle>
             <Dropdown.Menu>
                 {device.brands.map(brand =>
-                    <Dropdown.Item onClick={() => device.setSelectedBrand(brand)}
+                    <Dropdown.Item onClick={() => device.setSelectedBrand([brand])}
                      key={brand.id}>{brand.name}</Dropdown.Item>
                     )}
             </Dropdown.Menu>

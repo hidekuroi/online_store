@@ -1,6 +1,8 @@
 const ApiError = require('../error/ApiError')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const uuid = require('uuid')
+const path = require('path')
 const {User, Basket} = require('../models/models')
 
 const generateJwt = (id, email, role, userName) => {
@@ -43,16 +45,32 @@ class UserController {
     }
     async check(req, res, next) {
         const token = generateJwt(req.user.id, req.user.email, req.user.role, req.user.userName)
-        return res.json({token})
+
+        const user = await User.findOne({where: {id: req.user.id}}) 
+        const img = user.img
+
+        return res.json({token, img})
     }
 
     async updateUser(req, res, next) {
         const {userName} = req.body
+        const {img} = req.files
+        let fileName = uuid.v4() + '.jpg'
+        img.mv(path.resolve(__dirname, '..', 'static', 'profilePics', fileName))
 
-        const userUpdated = await User.update({userName},{where: {id: req.user.id}})
-        const user = await User.findOne({where:{id: req.user.id}})
-        const token = generateJwt(user.id, user.email, user.role, user.userName)
-        return res.json({token})
+        if(!img){
+            const userUpdated = await User.update({userName},{where: {id: req.user.id}})
+            const user = await User.findOne({where:{id: req.user.id}})
+            const token = generateJwt(user.id, user.email, user.role, user.userName)
+            return res.json({token, img: user.img})
+        }
+        else if(img) {
+            const userUpdated = await User.update({img: fileName}, {where: {id: req.user.id}})
+            const user = await User.findOne({where:{id: req.user.id}})
+            const token = generateJwt(user.id, user.email, user.role, user.userName)
+            return res.json({token, img: user.img})
+        }
+        
     }
 }
 

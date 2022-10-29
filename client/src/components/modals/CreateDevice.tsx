@@ -3,18 +3,19 @@ import React, { useContext, useState, useEffect } from 'react'
 import { Modal, Button, Form, Dropdown, Row, Col, Alert } from 'react-bootstrap'
 import { createDevice, fetchBrands, fetchTypes } from '../../api/deviceApi'
 import { Context } from '../../index'
+import { ModalPropsType } from '../../pages/Admin'
 
 
-const CreateDevice = observer(({show, onHide}) => {
+const CreateDevice = observer(({show, onHide}: ModalPropsType) => {
     const {device} = useContext(Context)
     const [showSuccess, setShowSuccess] = useState(false)
     const [showError, setShowError] = useState(false)
-    const [info, setInfo] = useState([])
+    const [info, setInfo] = useState([{title: '', description: '', number: 0}])
 
     const [name, setName] = useState('')
     const [price, setPrice] = useState('')
     const [file, setFile] = useState(null)
-    const [additionalFiles, setAdditionalFiles] = useState(null)
+    const [additionalFiles, setAdditionalFiles] = useState([])
 
     useEffect(() => {
         fetchTypes().then(data => {
@@ -33,31 +34,30 @@ const CreateDevice = observer(({show, onHide}) => {
         setInfo([...info, {title: '', description: '', number: Date.now()}])
     }
 
-    const removeInfo = (number) => {
+    const removeInfo = (number: number) => {
         setInfo(info.filter(i => i.number !== number))
     }
 
-    const changeInfo = (key, value, number) => {
+    const changeInfo = (key: string, value: string, number: number) => {
         setInfo(info.map(i => i.number === number ? {...i, [key]: value} : i))
     }
 
-    const selectAdditionalFiles = (e) => {
+    //@ts-ignore
+    const selectAdditionalFiles = (e: any) => {
         setAdditionalFiles(e.target.files)
     }
-
-    const selectFile = (e) => {
+    //and here (fix later)
+    const selectFile = (e: any) => {
         setFile(e.target.files[0])
     }
 
     const addDevice = () => {
-        console.log(name && price && device.selectedBrand.id && device.selectedType?.id, file)
-        if(name && price && device.selectedBrand.id && device.selectedType?.id && file) {
-            console.log(name && price && device.selectedBrand.id && device.selectedType?.id && file)
+        if(name && price && device.selectedBrand[0].id && device.selectedType?.id && file) {
             const formData = new FormData()
             formData.append('name', name)
             formData.append('price', price)
-            formData.append('brandId', device.selectedBrand.id)
-            formData.append('typeId', device.selectedType?.id)
+            formData.append('brandId', device.selectedBrand[0].id.toString())
+            formData.append('typeId', device.selectedType.id.toString())
             formData.append('img', file)
             formData.append('info', JSON.stringify(info))
 
@@ -67,7 +67,7 @@ const CreateDevice = observer(({show, onHide}) => {
                 }
             }
             
-            createDevice(formData).then(data => console.log('created'))
+            createDevice(formData).then(data => {})
 
             setShowSuccess(true)
             setTimeout(() => {
@@ -110,11 +110,11 @@ const CreateDevice = observer(({show, onHide}) => {
         </Dropdown>
         <Dropdown className='mt-2 mb-2'>
             <Dropdown.Toggle variant="outline-primary">
-                {device.selectedBrand.name || "Выберите брэнд"}
+                {device.selectedBrand[0]?.name || "Выберите брэнд"}
             </Dropdown.Toggle>
             <Dropdown.Menu>
                 {device.brands.map(brand =>
-                    <Dropdown.Item onClick={() => device.setSelectedBrand(brand)}
+                    <Dropdown.Item onClick={() => device.setSelectedBrand([brand])}
                      key={brand.id}>{brand.name}</Dropdown.Item>
                     )}
             </Dropdown.Menu>

@@ -72,16 +72,17 @@ function Admin() {
       </Col>
       <CreateType show={typeVisible} onHide={() => setTypeVisible(false)}/>
       <CreateBrand show={brandVisible} onHide={() => setBrandVisible(false)}/>
-      {/* @ts-ignore */}
       <CreateDevice show={deviceVisible} onHide={() => setDeviceVisible(false)}/>
-      {/* @ts-ignore */}
       <DeleteBrand show={deleteBrandVisible} onHide={() => setDeleteBrandVisible(false)} />
-      {/* @ts-ignore */}
       <DeleteType show={deleteTypeVisible} onHide={() => setDeleteTypeVisible(false)} />
-      {/* @ts-ignore */}
       <DeleteDevice show={deleteDeviceVisible} onHide={() => setDeleteDeviceVisible(false)} />
     </Container>
   )
 }
 
 export default Admin
+
+export type ModalPropsType = {
+  show: boolean,
+  onHide: () => void
+}

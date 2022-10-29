@@ -8,6 +8,7 @@ import { observer } from 'mobx-react-lite'
 import { useNavigate } from 'react-router-dom'
 import avatar from '../assets/person-circle.svg'
 import cart from '../assets/cart.svg'
+import { Avatar } from '@mui/material'
 
 const NavBar = observer(() => {
     const {user} = useContext(Context)
@@ -31,10 +32,11 @@ const NavBar = observer(() => {
                     </NavLink>
 
 
-                    <NavLink to={PROFILE_ROUTE + '/personal'}>
-                      <Button variant={'outline-light'}>
-                      <Image height={20} width={20}  src={avatar}
-                      style={{filter: 'invert(100%)', marginRight: 10}}  />
+                    <NavLink style={{textDecoration: 'none'}} to={PROFILE_ROUTE + '/personal'}>
+                      <Button variant={'outline-light'} style={{display: 'flex', textAlign: 'center', alignItems: 'center', gap: '5px'}}>
+                      <Avatar sx={{ width: 24, height: 24 }} src={process.env.REACT_APP_BASE_URL + 'profilePics/' + user.user.img} />
+                      {/* <Image height={20} width={20}  src={avatar}
+                      style={{filter: 'invert(100%)', marginRight: 10}}  /> */}
 
                       {user.user.email}
                     
@@ -52,7 +54,7 @@ const NavBar = observer(() => {
                   <Button variant={'outline-light'} onClick={() => {
                     user.setUser({})
                     user.setIsAuth(false)
-                    basket.setBasketDevices({})
+                    basket.setBasketDevices([])
                     navigate(LOGIN_ROUTE)
                     localStorage.removeItem('token')
                   }}

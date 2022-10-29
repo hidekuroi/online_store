@@ -6,17 +6,17 @@ export const getBasketDevices = async () => {
     return response.data
 }
 
-export const deleteBasketDevice = async (basketDeviceId) => {
+export const deleteBasketDevice = async (basketDeviceId: number) => {
     const response = await $authHost.delete('api/basket', {data: {basketDeviceId}})
     return response.data
 }
 
-export const addToBasket = async (deviceId) => {
+export const addToBasket = async (deviceId: number) => {
     const response = await $authHost.post('api/basket', {deviceId})
     return response.data
 }
 
-export const updateAmount = async (basketDeviceId, amount) => {
+export const updateAmount = async (basketDeviceId: number, amount: number) => {
     const response = await $authHost.put('api/basket', {basketDeviceId, amount})
     return response.data
 } 

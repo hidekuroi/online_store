@@ -1,26 +1,34 @@
 import { observer } from 'mobx-react-lite'
 import React, { useContext, useState } from 'react'
-import { Modal, Button, Form, Alert, Dropdown } from 'react-bootstrap'
-import { deleteType, fetchTypes } from '../../api/deviceApi'
+import { Modal, Button, Form, Alert } from 'react-bootstrap'
+import { deleteDevice, fetchDevices } from '../../api/deviceApi'
 import { Context } from '../../index'
+import { ModalPropsType } from '../../pages/Admin'
 
-const DeleteType = observer(({show, onHide}) => {
+const DeleteDevice = observer(({show, onHide}: ModalPropsType) => {
   const {device} = useContext(Context)
+  const [value, setValue] = useState('')
   const [showAlert, setShowAlert] = useState(false)
   const [showErrorAlert, setShowErrorAlert] = useState(false)
 
-  const onDeleteType = () => {
-    if(device.selectedType?.id) {
-      deleteType(JSON.stringify(device.selectedType?.id)).then(data => {
-        setShowAlert(true)
+
+  const onDeleteDevice = () => {
+    if(value.length > 0) {
+      deleteDevice(Number(value)).then(data => {
+        if(data > 0){
+          setShowAlert(true)
         setTimeout(() => {
           setShowAlert(false)
         }, 1500);
-        device.setSelectedType(null)
 
-        fetchTypes().then(data => {
-            device.setTypes(data)
+        fetchDevices().then(data => {
+            device.setDevices(data)
           })
+        }
+        else {
+          alert('Не найдено устройства с данным id.')
+        }
+
       }) 
     }else {
       setShowErrorAlert(true)
@@ -47,39 +55,30 @@ const DeleteType = observer(({show, onHide}) => {
   >
     <Modal.Header closeButton>
       <Modal.Title id="contained-modal-title-vcenter">
-        Удалить тип
+        Удалить брэнд
       </Modal.Title>
     </Modal.Header>
     <Modal.Body>
       <Form>
-        <Dropdown className='mt-2 mb-2'>
-            <Dropdown.Toggle variant="outline-primary">
-                {device.selectedType?.name || "Выберите тип"}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-                {device.types.map(type =>
-                    <Dropdown.Item onClick={() => device.setSelectedType(type)}
-                     key={type.id}>{type.name}</Dropdown.Item>
-                    )}
-            </Dropdown.Menu>
-        </Dropdown>
+        <Form.Control value={value} onChange={(e) => setValue(e.target.value)}
+         type='number' placeholder="Введите id устройства, которое хотите удалить"/>
       </Form>
 
       <Alert className='mt-2 d-flex' show={showAlert} variant="success">
-        <Alert.Heading>Тип удалён.</Alert.Heading>
+        <Alert.Heading>Устройство удалено.</Alert.Heading>
       </Alert>
 
       <Alert className='mt-2 d-flex' show={showErrorAlert} variant="danger">
-        <Alert.Heading>Выберите тип для удаления.</Alert.Heading>
+        <Alert.Heading>Введите id.</Alert.Heading>
       </Alert>
 
     </Modal.Body>
     <Modal.Footer>
-        <Button variant="danger" onClick={onDeleteType}>Удалить</Button>
+        <Button variant="danger" onClick={onDeleteDevice}>Удалить</Button>
         <Button variant="outline-primary" onClick={() => hideClear()}>Закрыть</Button>
     </Modal.Footer>
   </Modal>
   )
 })
 
-export default DeleteType
+export default DeleteDevice

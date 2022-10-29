@@ -40,12 +40,16 @@ const Basket = observer(() => {
           <Col md={9} className='p-2'>
 
             <ListGroup as="ol" numbered>
-              {basket.basketDevices.map(d => 
+              {basket.basketDevices.map(d => {
 
-              <BasketItem d={d}
-              brand={device.brands.map((b) => b.id === d.deviceInfo.brandId && b.name)}
-              deleteBasketItem={(id: number) => deleteBasketItem(id)} />
+                let brandname = ''
+                device.brands.map((b) => b.id === d.deviceInfo.brandId && (brandname = b.name))
+
+              return <BasketItem d={d}
+                brand={brandname}
+                deleteBasketItem={(id: number) => deleteBasketItem(id)} />
               
+              }
               )}
             </ListGroup>
 

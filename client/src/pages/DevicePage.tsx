@@ -45,7 +45,7 @@ const DevicePage = observer(() => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if(id) fetchOneDevice(id).then(data => {
+    if(id) fetchOneDevice(Number(id)).then(data => {
       if(data){
       data.info.forEach((i: additionalInfoType) => i.toDelete = false)
       setDevice(data)
@@ -83,7 +83,6 @@ const DevicePage = observer(() => {
   const updateDev = (mode: boolean) => {
     if(!mode) {
 
-      console.log('DIXON BROUDI')
 
       let newDev = {...device}
       const formData = new FormData()
@@ -104,7 +103,7 @@ const DevicePage = observer(() => {
 
       updateDevice(formData).then(data => {
         setTimeout(() => {
-          fetchOneDevice(id).then(data => setDevice(data))
+          fetchOneDevice(Number(id)).then(data => setDevice(data))
         }, 500);
       })
     }

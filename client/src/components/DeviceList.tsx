@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite'
 import React, { useContext } from 'react'
 import {Context} from '../index'
 import {Row} from 'react-bootstrap'
-import DeviceItem from './DeviceItem.tsx'
+import DeviceItem from './DeviceItem'
 
 const DeviceList = observer(() => {
     const {device} = useContext(Context)
@@ -12,10 +12,15 @@ const DeviceList = observer(() => {
       {device.devices.length > 0
         ?
         <>
-        {device.devices.map(d => 
-            <DeviceItem key={d.id} device={d}
-            brand={device.brands.map((b) => b.id === d.brandId && b.name)}
+        {device.devices.map(d => {
+
+            let brandname = ''
+            device.brands.map((b) => b.id === d.brandId && (brandname = b.name))
+
+            return <DeviceItem key={d.id} device={d}
+            brand={brandname}
             />
+            }
             )}
         </>
         :

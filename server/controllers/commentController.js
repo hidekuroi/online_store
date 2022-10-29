@@ -20,7 +20,7 @@ class CommentController {
 
         for (let i = 0; i < comments.length; i++) {
             const user = await User.findOne({where: {id: comments[i].userId}})
-            commentsWithNames.push({comment: comments[i], userName: user.userName})
+            commentsWithNames.push({comment: comments[i], userName: user.userName, img: user.img})
         }
 
         return res.json(commentsWithNames.reverse())

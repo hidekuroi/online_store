@@ -2,15 +2,16 @@ import React, { useContext } from 'react'
 import { ListGroup, Card } from 'react-bootstrap'
 import {Context} from '../index'
 import { observer } from 'mobx-react-lite'
+import { deviceTypeType } from '../types/types'
 
 const TypeBar = observer(() => {
     const {device} = useContext(Context)
 
-    const selectType = (type) => {
+    const selectType = (type: deviceTypeType) => {
       if(type !== device.selectedType) {
         device.setSelectedType(type)
       } else {
-        device.setSelectedType({})
+        device.setSelectedType(null)
       }
     }
 

@@ -3,12 +3,20 @@ import { ListGroup, Image, Badge, Button, Col, Row, ButtonGroup, Card } from 're
 import { useNavigate } from 'react-router-dom'
 import { getBasketDevices, updateAmount } from '../api/basketApi'
 import { Context } from '../index'
+import { basketDeviceType } from '../types/types'
 
-const BasketItem = ({d, brand, deleteBasketItem}) => {
+type BasketItemProps = {
+  d: basketDeviceType,
+  brand: string,
+
+  deleteBasketItem: (id: number) => void
+}
+
+const BasketItem = ({d, brand, deleteBasketItem}: BasketItemProps) => {
     const navigate = useNavigate()
     const {basket} = useContext(Context)
 
-    const changeAmount = (amount) => {
+    const changeAmount = (amount: number) => {
       if(amount >= 1) {
         updateAmount(d.basketDeviceId, amount).then(data => {
           getBasketDevices().then(d => {

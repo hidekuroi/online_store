@@ -30,7 +30,6 @@ const DeviceItem = ({device, brand}: DeviceItemPropsType) => {
                     {Math.floor(device.rating * 100) / 100}
                     <img src={star} alt="Rating" width="14" height="14" />
                 </Card.Text>
-                {/*@ts-ignore*/}
                 <BasketButton deviceId={device.id}/>
             </Card.Body>
         </Card>

@@ -64,5 +64,6 @@ export type commentBodyType = {
 
 export type commentType = { 
     comment: commentBodyType,
-    userName: string
+    userName: string,
+    img: string
 }

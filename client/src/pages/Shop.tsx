@@ -18,14 +18,16 @@ const Shop = observer(() => {
   const {user} = useContext(Context)
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const search = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
+  const search = (e?: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault()
+    e?.stopPropagation()
 
     device.setSelectedBrand([])
     device.setSelectedType(null)
 
-    fetchDevices(null, null, device.page, device.limit, searchValue).then(data => {
+    setSearchParams({page: device.page.toString(), searchValue})
+
+    fetchDevices(undefined, undefined, device.page, device.limit, searchValue).then(data => {
       device.setDevices(data.rows)
       device.setTotalCount(data.count)
     })
@@ -37,13 +39,23 @@ const Shop = observer(() => {
     const params = Object.fromEntries(Array.from(searchParams))
     device.setPage(Number(params.page) ? Number(params.page) : 1)
 
+
+    if(params.typeId) {
+        device.setSelectedType({createdAt: '', id: Number(params.typeId), name: '', updatedAt: ''})
+    }
+
+    if(params.searchValue){
+      setSearchValue(params.searchValue)
+      search()
+    }
+
     fetchTypes().then(data => {
       device.setTypes(data)
     })
     fetchBrands().then(data => {
       device.setBrands(data)
     })
-    fetchDevices(null, null, device.page, device.limit).then(data => {
+    fetchDevices(undefined, undefined, device.page, device.limit).then(data => {
       device.setDevices(data.rows)
       device.setTotalCount(data.count)
     })
@@ -57,7 +69,9 @@ const Shop = observer(() => {
 
   useEffect(() => {
 
-    setSearchParams({page: device.page.toString()})
+    if(!searchValue && !device.selectedType?.id)setSearchParams({page: device.page.toString()})
+    else if (!device.selectedType?.id) setSearchParams({page: device.page.toString(), searchValue})
+    else setSearchParams({page:device.page.toString(), typeId: device.selectedType.id.toString()})
 
     let brandIds = []
     for (let i = 0; i < device.selectedBrand.length; i++) {
@@ -77,7 +91,6 @@ const Shop = observer(() => {
 
   useEffect(() => {
     
-  console.log('changed')
     //device.setPage()
     
   }, [searchParams])
