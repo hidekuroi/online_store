@@ -63,7 +63,7 @@ const Comments = observer(({deviceId}: CommentsProps) => {
                 return <Card className='mt-3' key={c.comment.id}>
                     <Card.Header className='d-flex' style={{backgroundColor: c.comment.userId === user.user.id ? 'lightcyan' : ''}}>
                         <Col>
-                            <Col style={{display: 'flex', alignItems: 'center', gap: '7px'}}><Avatar sx={{height: '58px', width: '58px'}} src={`${process.env.REACT_APP_BASE_URL}/profilePics/${c.img}`}>test</Avatar><h5 style={{marginTop: 5}}>{c.userName}</h5></Col>
+                            <Col style={{display: 'flex', alignItems: 'center', gap: '7px'}}><Avatar sx={{height: '58px', width: '58px'}} src={`${process.env.REACT_APP_BASE_URL}profilePics/${c.img}`}>test</Avatar><h5 style={{marginTop: 5}}>{c.userName}</h5></Col>
                             <i>{date[0]}</i>
                             <i>{`\n | \n${localTime}`}</i>
                         </Col>

@@ -125,10 +125,13 @@ class DeviceController {
         }  
     }
     async getAll(req, res) {
-        let {brandId, typeId, limit, page, searchQuery} = req.query
+        let {brandId, typeId, limit, page, searchQuery, orderBy, order} = req.query
         limit = limit || 16
         page = page || 1
         let offset = page * limit - limit
+
+        order = order || 'ASC'
+        orderBy = orderBy || 'id'
 
         let devices;
         if(!brandId && !typeId) {
@@ -136,18 +139,18 @@ class DeviceController {
             if(searchQuery) {
                 devices = await Device.findAndCountAll({where: {
                     name: {[Op.iLike]: `%${searchQuery}%`}
-                }, limit, offset, order: [['id', 'ASC']]})
+                }, limit, offset, order: [[orderBy, order]]})
             }
-            else devices = await Device.findAndCountAll({limit, offset, order: [['id', 'ASC']]})
+            else devices = await Device.findAndCountAll({limit, offset, order: [[orderBy, order]]})
         }
         if(brandId && !typeId) {
-            devices = await Device.findAndCountAll({where: {brandId}, limit, offset, order: [['id', 'ASC']]})
+            devices = await Device.findAndCountAll({where: {brandId}, limit, offset, order: [[orderBy, order]]})
         }
         if(!brandId && typeId) {
-            devices = await Device.findAndCountAll({where: {typeId}, limit, offset, order: [['id', 'ASC']]})
+            devices = await Device.findAndCountAll({where: {typeId}, limit, offset, order: [[orderBy, order]]})
         }
         if(brandId && typeId) {
-            devices = await Device.findAndCountAll({where: {brandId, typeId}, limit, offset, order: [['id', 'ASC']]})
+            devices = await Device.findAndCountAll({where: {brandId, typeId}, limit, offset, order: [[orderBy, order]]})
         }
 
 

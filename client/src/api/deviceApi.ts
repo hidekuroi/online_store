@@ -32,9 +32,9 @@ export const createDevice = async (device: any) => {
     const response = await $authHost.post('api/device', device)
     return response.data
 }
-export const fetchDevices = async (typeId?: number, brandId?: number | number[], page?: number, limit=9, searchQuery='') => {
+export const fetchDevices = async (typeId?: number, brandId?: number | number[], page?: number, limit=9, searchQuery='', orderBy?: string, order?: string) => {
     const response = await $host.get('api/device', {params: {
-        typeId, brandId, page, limit, searchQuery
+        typeId, brandId, page, limit, searchQuery, orderBy, order
     }})
     return response.data
 }

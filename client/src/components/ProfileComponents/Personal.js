@@ -48,6 +48,7 @@ const Personal = observer(() => {
                 <Row>Имя пользователя: {userName}</Row>
                 <Row>Фото профиля:</Row>
                 <Row>
+                  {console.log(user.user.img)}
                   <Image style={{maxWidth: '400px'}}
                    src={process.env.REACT_APP_BASE_URL + 'profilePics/' + user.user.img} />
                    

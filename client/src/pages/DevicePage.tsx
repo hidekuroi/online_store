@@ -92,7 +92,7 @@ const DevicePage = observer(() => {
             formData.append('brandId', (newDev.brandId).toString())
             formData.append('typeId', (newDev.typeId).toString())
             //@ts-ignore
-            formData.append('img', file[0])
+            formData.append('img', file)
             formData.append('info', JSON.stringify(newDev.info))
 
             if(additionalFiles) {
@@ -102,6 +102,7 @@ const DevicePage = observer(() => {
             }
 
       updateDevice(formData).then(data => {
+        console.log(formData)
         setTimeout(() => {
           fetchOneDevice(Number(id)).then(data => setDevice(data))
         }, 500);
