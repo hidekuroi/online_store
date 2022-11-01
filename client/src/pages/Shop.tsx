@@ -166,6 +166,7 @@ const Shop = observer(() => {
                       >По умолчанию</Dropdown.Item>
                       <Dropdown.Item onClick={() => {
                         setOrderBy('price')
+                        setOrder('ASC')
                         setSearchParams({page: '1',orderBy: 'price'})
                         device.setPage(1)
                       }}

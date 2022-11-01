@@ -54,9 +54,19 @@ class UserController {
 
     async updateUser(req, res, next) {
         const {userName} = req.body
-        const {img} = req.files
-        let fileName = uuid.v4() + '.jpg'
-        img.mv(path.resolve(__dirname, '..', 'static', 'profilePics', fileName))
+        let img
+        let fileName
+        
+
+        if(req.files) {
+            img = req.files.img
+            fileName = uuid.v4() + '.jpg'
+            img.mv(path.resolve(__dirname, '..', 'static', 'profilePics', fileName))
+        }
+        else {
+            img = null
+        }
+        
 
         if(!img){
             const userUpdated = await User.update({userName},{where: {id: req.user.id}})
@@ -65,7 +75,8 @@ class UserController {
             return res.json({token, img: user.img})
         }
         else if(img) {
-            const userUpdated = await User.update({img: fileName}, {where: {id: req.user.id}})
+            let userUpdated = await User.update({img: fileName}, {where: {id: req.user.id}})
+            if(userName) userUpdated = await User.update({userName}, {where: {id: req.user.id}})
             const user = await User.findOne({where:{id: req.user.id}})
             const token = generateJwt(user.id, user.email, user.role, user.userName)
             return res.json({token, img: user.img})

@@ -1,7 +1,8 @@
 const ApiError = require('../error/ApiError')
 const uuid = require('uuid')
 const path = require('path')
-const {Device, DeviceInfo, Comment, DeviceImage} = require('../models/models')
+const fs = require('fs')
+const {Device, DeviceInfo, Comment, DeviceImage, Rating, Brand} = require('../models/models')
 const { Op } = require("sequelize");
 
 class DeviceController {
@@ -51,7 +52,6 @@ class DeviceController {
         }  
     }
     async updateDevice(req, res, next) {
-        console.log(req.files?.img)
         try {
             let {name, price, brandId, typeId, info, id} = req.body
             let img = {}
@@ -167,6 +167,8 @@ class DeviceController {
                     order: [[{ model: DeviceInfo, as: 'info' }, 'id', 'ASC']]
                 },
             )
+            const brand = await Brand.findOne({where: {id: device.brandId}})
+            if(brand) device.dataValues.brandName = brand.name
             return res.json(device)
         }
         catch(e) {
@@ -176,9 +178,21 @@ class DeviceController {
     async delete(req, res) {
         const {id} = req.body
 
+        const device = await Device.findOne({where: {id}})
+        fs.rmSync(path.resolve(__dirname, '..', 'static', device.img), {
+            force: true
+        })
+        const additionalImages = await DeviceImage.findAll({where: {deviceId: id}})
+        additionalImages.forEach((i) => {
+            fs.rmSync(path.resolve(__dirname, '..', 'static', i.dataValues.img), {
+                force: true
+            })
+        })
+
         const deviceImages = await DeviceImage.destroy({where: {deviceId: id}})
         const deviceInfo = await DeviceInfo.destroy({where: {deviceId: id}})
         const comments = await Comment.destroy({where: {deviceId: id}})
+        const rating = await Rating.destroy({where: {deviceId: id}})
         const count = await Device.destroy(
             {
                 where: {id},

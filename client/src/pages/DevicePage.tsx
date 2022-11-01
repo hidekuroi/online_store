@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Container, Image, Col, Row, Button, Card, Form, InputGroup, Modal, Spinner, Carousel} from 'react-bootstrap'
+import { Container, Image, Col, Row, Button, Card, Form, InputGroup, Modal, Spinner, Carousel, Dropdown} from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
-import { deleteDevice, fetchOneDevice, updateDevice } from '../api/deviceApi'
+import { deleteDevice, fetchBrands, fetchOneDevice, updateDevice } from '../api/deviceApi'
 import BasketButton from '../components/BasketButton'
 import { observer } from 'mobx-react-lite'
 import Comments from '../components/Comments'
 import RatingComponent from '../components/RatingComponent'
 import {Context} from '../index'
-import { additionalInfoType, fullDeviceDataType } from '../types/types'
+import { additionalInfoType, brandType, fullDeviceDataType } from '../types/types'
 
 interface HTMLInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
@@ -27,9 +27,12 @@ const DevicePage = observer(() => {
      rating: 0,
      typeId: 0,
      updatedAt: '',
-     images: []
+     images: [],
+     brandName: ''
     }
     )
+  const [brands, setBrands] = useState<brandType[]>([])
+  const [selectedBrand, setSelectedBrand] = useState<brandType>()
   const [editMode, setEditMode] = useState(false)
   const [isModal, setIsModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -52,6 +55,8 @@ const DevicePage = observer(() => {
       }
       setIsLoading(false)
     })
+
+    fetchBrands().then(data => setBrands(data))
   }, [])
 
   const selectFile = (e: React.ChangeEvent) => {
@@ -89,11 +94,15 @@ const DevicePage = observer(() => {
             formData.append('name', newDev.name)
             formData.append('price', (newDev.price).toString())
             formData.append('id', (newDev.id).toString())
-            formData.append('brandId', (newDev.brandId).toString())
             formData.append('typeId', (newDev.typeId).toString())
             //@ts-ignore
             formData.append('img', file)
             formData.append('info', JSON.stringify(newDev.info))
+
+            if(selectedBrand) {
+              formData.append('brandId', (selectedBrand.id).toString())
+            }
+            else formData.append('brandId', (newDev.brandId).toString())
 
             if(additionalFiles) {
               for (let i = 0; i < additionalFiles.length; i++) {
@@ -102,7 +111,6 @@ const DevicePage = observer(() => {
             }
 
       updateDevice(formData).then(data => {
-        console.log(formData)
         setTimeout(() => {
           fetchOneDevice(Number(id)).then(data => setDevice(data))
         }, 500);
@@ -175,6 +183,28 @@ const DevicePage = observer(() => {
       </Col>
       <Col md={4}>
         <Row className="d-flex flex-column align-items-center justify-content-center">
+          {editMode
+          ? 
+          <Form>
+          <Dropdown className='mt-2 mb-2'>
+              <Dropdown.Toggle variant="outline-primary">
+                  {device.brandName || selectedBrand?.name}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                  {brands.map(brand =>
+                      <Dropdown.Item 
+                      onClick={() => {
+                        setSelectedBrand(brand)
+                        device.brandName = brand.name
+                      }
+                      }
+                      key={brand.id}>{brand.name}</Dropdown.Item>
+                      )}
+              </Dropdown.Menu>
+          </Dropdown>
+          </Form>
+          :
+          <h4 style={{fontWeight: 'normal', color: 'gray'}}>{device.brandName}</h4>}
           <h2>{editMode 
           ? <Form><Form.Control value={device.name} onChange={(e) => setDevice({...device, name: e.target.value})}/></Form> 
           : `${device.name}`}</h2>
@@ -197,6 +227,9 @@ const DevicePage = observer(() => {
             }}
              variant={editMode ? 'outline-success' : 'outline-warning'}
              >{editMode ? "Сохранить" : "Редактировать данные устройства"}</Button>
+             {editMode && <Button 
+             onClick={() => {setEditMode(false)}}
+             variant='outline-primary'>Отмена</Button>}
             <Button className='mt-2' onClick={() => setIsModal(true)}
              variant='outline-danger' >Удалить устройство</Button>
 
