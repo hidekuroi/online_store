@@ -51,7 +51,8 @@ export type imageType = {
 export type fullDeviceDataType = minDeviceDataType & {
     info: Array<additionalInfoType>,
     images: Array<imageType>,
-    brandName: String
+    brandName: string,
+    typeName: string
 }
 
 export type commentBodyType = {

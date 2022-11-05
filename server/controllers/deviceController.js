@@ -2,7 +2,7 @@ const ApiError = require('../error/ApiError')
 const uuid = require('uuid')
 const path = require('path')
 const fs = require('fs')
-const {Device, DeviceInfo, Comment, DeviceImage, Rating, Brand} = require('../models/models')
+const {Device, DeviceInfo, Comment, DeviceImage, Rating, Brand, Type} = require('../models/models')
 const { Op } = require("sequelize");
 
 class DeviceController {
@@ -168,7 +168,9 @@ class DeviceController {
                 },
             )
             const brand = await Brand.findOne({where: {id: device.brandId}})
+            const type = await Type.findOne({where: {id: device.typeId}})
             if(brand) device.dataValues.brandName = brand.name
+            if(type) device.dataValues.typeName = type.name
             return res.json(device)
         }
         catch(e) {

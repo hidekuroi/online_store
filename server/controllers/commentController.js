@@ -8,22 +8,28 @@ class CommentController {
     async addComment(req, res) {
         const {deviceId, body} = req.body
         const comment = await Comment.create({deviceId, body, userId: req.user.id})
+        const user = await User.findOne({where: {id: req.user.id}})
         
-        return res.json(comment)
+        return res.json({comment, userName: user.userName, img: user.img})
     }
     async getComments(req, res, next) {
         try{
-        const {deviceId} = req.query
-        const comments = await Comment.findAll({where: {deviceId}})
+        let {deviceId, limit, page, deletedAmount} = req.query
+        deletedAmount = deletedAmount || 0
+        limit = limit || 10
+        page = page || 1
+        let offset = page * limit - limit - deletedAmount
+
+        const comments = await Comment.findAndCountAll({where: {deviceId}, limit, offset, order: [['id', 'DESC']]})
 
         let commentsWithNames = []
 
-        for (let i = 0; i < comments.length; i++) {
-            const user = await User.findOne({where: {id: comments[i].userId}})
-            commentsWithNames.push({comment: comments[i], userName: user.userName, img: user.img})
+        for (let i = 0; i < comments.rows.length; i++) {
+            const user = await User.findOne({where: {id: comments.rows[i].userId}})
+            commentsWithNames.push({comment: comments.rows[i], userName: user.userName, img: user.img})
         }
 
-        return res.json(commentsWithNames.reverse())
+        return res.json({comments: commentsWithNames, count: comments.count})
 
         }
         catch(e) {

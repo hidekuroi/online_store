@@ -1,8 +1,8 @@
 import { $authHost, $host } from "./APIindex";
 
 
-export const getComments = async (deviceId: number) => {
-    const response = await $host.get('api/comment', {params: {deviceId}})
+export const getComments = async (deviceId: number, page?: number, limit?: number, deletedAmount?: number) => {
+    const response = await $host.get('api/comment', {params: {deviceId, page, limit, deletedAmount}})
     return response.data
 }
 

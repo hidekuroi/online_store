@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Container, Image, Col, Row, Button, Card, Form, InputGroup, Modal, Spinner, Carousel, Dropdown} from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
-import { deleteDevice, fetchBrands, fetchOneDevice, updateDevice } from '../api/deviceApi'
+import { deleteDevice, fetchBrands, fetchOneDevice, fetchTypes, updateDevice } from '../api/deviceApi'
 import BasketButton from '../components/BasketButton'
 import { observer } from 'mobx-react-lite'
 import Comments from '../components/Comments'
 import RatingComponent from '../components/RatingComponent'
 import {Context} from '../index'
-import { additionalInfoType, brandType, fullDeviceDataType } from '../types/types'
+import { additionalInfoType, brandType, deviceTypeType, fullDeviceDataType } from '../types/types'
 
 interface HTMLInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
@@ -28,11 +28,14 @@ const DevicePage = observer(() => {
      typeId: 0,
      updatedAt: '',
      images: [],
-     brandName: ''
+     brandName: '',
+     typeName: ''
     }
     )
   const [brands, setBrands] = useState<brandType[]>([])
+  const [types, setTypes] = useState<deviceTypeType[]>([])
   const [selectedBrand, setSelectedBrand] = useState<brandType>()
+  const [selectedType, setSelectedType] = useState<deviceTypeType>()
   const [editMode, setEditMode] = useState(false)
   const [isModal, setIsModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -57,6 +60,8 @@ const DevicePage = observer(() => {
     })
 
     fetchBrands().then(data => setBrands(data))
+    fetchTypes().then(data => setTypes(data))
+
   }, [])
 
   const selectFile = (e: React.ChangeEvent) => {
@@ -94,7 +99,6 @@ const DevicePage = observer(() => {
             formData.append('name', newDev.name)
             formData.append('price', (newDev.price).toString())
             formData.append('id', (newDev.id).toString())
-            formData.append('typeId', (newDev.typeId).toString())
             //@ts-ignore
             formData.append('img', file)
             formData.append('info', JSON.stringify(newDev.info))
@@ -103,6 +107,11 @@ const DevicePage = observer(() => {
               formData.append('brandId', (selectedBrand.id).toString())
             }
             else formData.append('brandId', (newDev.brandId).toString())
+
+            if(selectedType) {
+              formData.append('typeId', (selectedType.id).toString())
+            }
+            else formData.append('typeId', (newDev.typeId).toString())
 
             if(additionalFiles) {
               for (let i = 0; i < additionalFiles.length; i++) {
@@ -186,6 +195,24 @@ const DevicePage = observer(() => {
           {editMode
           ? 
           <Form>
+
+          <Dropdown className='mt-2 mb-2'>
+              <Dropdown.Toggle variant="outline-primary">
+                  {device.typeName || selectedType?.name}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                  {types.map(type =>
+                      <Dropdown.Item 
+                      onClick={() => {
+                        setSelectedType(type)
+                        device.typeName = type.name
+                      }
+                      }
+                      key={type.id}>{type.name}</Dropdown.Item>
+                      )}
+              </Dropdown.Menu>
+          </Dropdown>
+
           <Dropdown className='mt-2 mb-2'>
               <Dropdown.Toggle variant="outline-primary">
                   {device.brandName || selectedBrand?.name}
@@ -202,10 +229,15 @@ const DevicePage = observer(() => {
                       )}
               </Dropdown.Menu>
           </Dropdown>
+          
           </Form>
           :
-          <h4 style={{fontWeight: 'normal', color: 'gray'}}>{device.brandName}</h4>}
-          <h2>{editMode 
+          <div style={{fontWeight: 'lighter', color: 'gray'}}>
+            <h5 style={{fontStyle: 'italic'}}>{device.typeName}</h5>
+            <h3 >{device.brandName}</h3>
+          </div>
+          }
+          <h2 style={{marginTop: '-10px'}}>{editMode 
           ? <Form><Form.Control value={device.name} onChange={(e) => setDevice({...device, name: e.target.value})}/></Form> 
           : `${device.name}`}</h2>
           <div>

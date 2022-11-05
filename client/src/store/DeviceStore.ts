@@ -1,3 +1,4 @@
+import { addComment } from './../api/commentsApi';
 import { deviceTypeType, brandType, minDeviceDataType, commentType } from './../types/types';
 import {makeAutoObservable} from 'mobx'
 
@@ -52,6 +53,17 @@ export default class DeviceStore {
     }
     setComments(comments: commentType[]) {
         this._comments = comments
+    }
+    pushComments(comments: commentType[]) {
+        if(this._comments.length > 0) {
+            this._comments = [...this._comments, ...comments]
+        }
+    }
+    deleteComment(commentId: number) {
+        this._comments = this._comments.filter((c) => c.comment.id !== commentId)
+    }
+    addComment(comment: commentType) {
+        this._comments = [comment, ...this._comments]
     }
     setPage(page: number) {
         this._page = page

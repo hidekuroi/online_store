@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Col } from 'react-bootstrap'
+import { Card, Col, Image } from 'react-bootstrap'
 import star from '../assets/star.svg'
 import {Link} from 'react-router-dom'
 import { DEVICE_ROUTE } from '../utils/consts'
@@ -19,8 +19,8 @@ const DeviceItem = ({device, brand}: DeviceItemPropsType) => {
     <Col md={3} className='mt-3'>
         <Card style={{border: 'light'}} className={`${classes.item}`}>
             <Link to={`${DEVICE_ROUTE}/${device.id}`}>
-                <Card.Img className='m-auto' style={{cursor: 'pointer'}}
-                variant='top' src={process.env.REACT_APP_BASE_URL + device.img}/>
+                    <Card.Img className='m-auto' style={{cursor: 'pointer'}}
+                     src={process.env.REACT_APP_BASE_URL + device.img} />
             </Link>
             <Card.Body>
                 <Card.Text style={{marginBottom: -3, color: 'gray', marginTop: -10}}>{brand}</Card.Text>
