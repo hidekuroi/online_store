@@ -1,11 +1,21 @@
 import { observer } from 'mobx-react-lite'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {Context} from '../index'
 import {Row} from 'react-bootstrap'
 import DeviceItem from './DeviceItem'
 
-const DeviceList = observer(() => {
+type DeviceListPropsType = {
+  isFetching: boolean
+}
+
+const DeviceList = observer(({isFetching}: DeviceListPropsType) => {
     const {device} = useContext(Context)
+
+    let skeletonItems = []
+
+    for (let i = 0; i < 16; i++) {
+      skeletonItems.push(i)
+    }    
 
   return (
     <Row className='d-flex'>
@@ -25,6 +35,14 @@ const DeviceList = observer(() => {
         </>
         :
         <>
+          <Row className='d-flex'>
+            {
+              isFetching 
+            &&
+              skeletonItems.map((item, index) => {return <DeviceItem key={index} />})
+            }
+              
+          </Row>
           <hr className='mt-4'/>
           <h3 className="mt-2 ml-2">Не найдено устройств по заданным критериям</h3>
         </>    

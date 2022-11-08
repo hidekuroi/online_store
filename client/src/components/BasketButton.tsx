@@ -7,7 +7,7 @@ import {Context} from '../index'
 import { basketDeviceType } from '../types/types'
 
 type BasketButtonPropsType = {
-  deviceId: number
+  deviceId?: number
 }
 
 const BasketButton = observer(({deviceId}: BasketButtonPropsType) => {
@@ -16,7 +16,10 @@ const BasketButton = observer(({deviceId}: BasketButtonPropsType) => {
     const {user} = useContext(Context)
     const navigate = useNavigate()
 
+    deviceId = deviceId ? deviceId : 0
+
     const add = () => {
+      //@ts-ignore
         addToBasket(deviceId).then(data => {
           getBasketDevices().then(d => {
             basket.setBasketDevices(d.devices)

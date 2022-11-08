@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Container, Image, Col, Row, Button, Card, Form, InputGroup, Modal, Spinner, Carousel, Dropdown} from 'react-bootstrap'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { deleteDevice, fetchBrands, fetchOneDevice, fetchTypes, updateDevice } from '../api/deviceApi'
 import BasketButton from '../components/BasketButton'
 import { observer } from 'mobx-react-lite'
@@ -8,10 +8,12 @@ import Comments from '../components/Comments'
 import RatingComponent from '../components/RatingComponent'
 import {Context} from '../index'
 import { additionalInfoType, brandType, deviceTypeType, fullDeviceDataType } from '../types/types'
+import { SHOP_ROUTE } from '../utils/consts'
+import ImageViewer from '../components/modals/ImageViewer'
 
-interface HTMLInputEvent extends Event {
-  target: HTMLInputElement & EventTarget;
-}
+//interface HTMLInputEvent extends Event {
+//  target: HTMLInputElement & EventTarget;
+//}
 
 const DevicePage = observer(() => {
   const {id} = useParams()
@@ -38,6 +40,10 @@ const DevicePage = observer(() => {
   const [selectedType, setSelectedType] = useState<deviceTypeType>()
   const [editMode, setEditMode] = useState(false)
   const [isModal, setIsModal] = useState(false)
+
+  const [imageViewer, setImageViewer] = useState<boolean>(false)
+  const [imageViewerSrc, setImageViewerSrc] = useState<string>('')
+
   const [isLoading, setIsLoading] = useState(true)
   const [file, setFile] = useState(null)
   const [additionalFiles, setAdditionalFiles] = useState([])
@@ -127,6 +133,15 @@ const DevicePage = observer(() => {
     }
   }
 
+  const hideImageViewer = () => {
+    setImageViewer(false)
+  }
+
+  const openImageViewer = (src: string) => {
+    setImageViewer(true)
+    setImageViewerSrc(src)
+  }
+
 
   if(isLoading) return(<Spinner animation="grow" />)
 
@@ -139,8 +154,9 @@ const DevicePage = observer(() => {
         ?
         <>
         <Image
-          style={{scale: '100%', maxHeight: 800, border: '1px solid lightgray', borderRadius: '4px'}}
-        fluid
+          style={{scale: '100%', maxHeight: 800, border: '1px solid lightgray', borderRadius: '4px', cursor: 'pointer'}}
+        fluid 
+        onClick={() => openImageViewer(process.env.REACT_APP_BASE_URL + device.img)}
          src={process.env.REACT_APP_BASE_URL + device.img} />
          {editMode && 
           <>
@@ -154,8 +170,8 @@ const DevicePage = observer(() => {
           <Carousel style={{border: '1px solid lightgray', borderRadius: '4px'}}
            interval={null} activeIndex={index} onSelect={handleSelect}>
 
-            <Carousel.Item className='justify-content-center'>
-            <a href={process.env.REACT_APP_BASE_URL + device.img}>
+            <Carousel.Item className='justify-content-center' style={{cursor: 'pointer'}}
+            onClick={() => openImageViewer(process.env.REACT_APP_BASE_URL + device.img)}>
               <Image
                 fluid
                 style={{scale: '100%', maxHeight: 650}}
@@ -163,13 +179,12 @@ const DevicePage = observer(() => {
                 src={process.env.REACT_APP_BASE_URL + device.img}
                 alt="First slide"
               />
-            </a>
             </Carousel.Item>
 
             {device.images.map((img) => {
-              return  <Carousel.Item key={img.id}
-              className='justify-content-center'>
-              <a href={process.env.REACT_APP_BASE_URL + img.img}>
+              return  <Carousel.Item key={img.id} onClick={() => openImageViewer(process.env.REACT_APP_BASE_URL + img.img)}
+              className='justify-content-center'
+              style={{cursor: 'pointer'}}>
                 <Image
                   fluid
                   style={{scale: '100%', maxHeight: 650}}
@@ -177,7 +192,6 @@ const DevicePage = observer(() => {
                   src={process.env.REACT_APP_BASE_URL + img.img}
                   alt="First slide"
                 />
-              </a>
             </Carousel.Item>
             })}
           </Carousel>
@@ -233,7 +247,7 @@ const DevicePage = observer(() => {
           </Form>
           :
           <div style={{fontWeight: 'lighter', color: 'gray'}}>
-            <h5 style={{fontStyle: 'italic'}}>{device.typeName}</h5>
+            <h5 style={{fontStyle: 'italic'}}><Link style={{color: 'gray', textDecoration: 'none'}} to={`${SHOP_ROUTE}?typeId=${device.typeId}`}>{device.typeName}</Link></h5>
             <h3 >{device.brandName}</h3>
           </div>
           }
@@ -271,7 +285,7 @@ const DevicePage = observer(() => {
       </Row>
 
       <Row className="d-flex flex-column m-2">
-        <h3>Характеристики:</h3>
+	<h3>Характеристики:</h3>
         <Row className='m-2'>
           {device.info.map((info, index) => 
             <Row style={{backgroundColor: index % 2 === 0 ? 'rgba(250,250,250)' : 'transparent', padding: 7}}
@@ -329,6 +343,8 @@ const DevicePage = observer(() => {
         <Button onClick={() => setIsModal(false)}>Отмена</Button>
       </Modal.Footer>
     </Modal>
+
+    <ImageViewer show={imageViewer} onHide={hideImageViewer} src={imageViewerSrc} />
       
       </>
       :

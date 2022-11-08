@@ -23,20 +23,40 @@ const Shop = observer(() => {
   const {user} = useContext(Context)
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const [isFetching, setIsFetching] = useState<boolean>(false)
+
   const search = (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault()
     e?.stopPropagation()
 
-    device.setSelectedBrand([])
-    device.setSelectedType(null)
-    setOrderBy('')
-    setOrder('ASC')
+    
 
     setSearchParams({page: device.page.toString(), searchValue})
 
+    setIsFetching(true)
+
     fetchDevices(undefined, undefined, device.page, device.limit, searchValue).then(data => {
-      device.setDevices(data.rows)
-      device.setTotalCount(data.count)
+      
+
+      console.log(data.count !== 0)
+      if(data.count !== 0) {
+        setIsFetching(false)
+        device.setSelectedBrand([])
+        device.setSelectedType(null)
+        setOrderBy('')
+        setOrder('ASC')
+
+        device.setDevices(data.rows)
+        device.setTotalCount(data.count)
+      }
+      else {
+        setTimeout(() => {
+          setIsFetching(false)
+
+          device.setDevices(data.rows)
+          device.setTotalCount(data.count)
+        }, 800);
+      }
     })
   }
 
@@ -64,6 +84,8 @@ const Shop = observer(() => {
       setOrder(params.order)
     }
 
+    setIsFetching(true)
+
     fetchTypes().then(data => {
       device.setTypes(data)
     })
@@ -73,6 +95,8 @@ const Shop = observer(() => {
     fetchDevices(undefined, undefined, device.page, device.limit).then(data => {
       device.setDevices(data.rows)
       device.setTotalCount(data.count)
+
+      setIsFetching(false)
     })
 
     return () => {
@@ -107,9 +131,13 @@ const Shop = observer(() => {
 
     if (brandIds.length === 0) brandIds = []
 
+    device.setDevices([])
+    setIsFetching(true)
+
       fetchDevices(device.selectedType?.id, brandIds, device.page, device.limit, searchValue, orderBy, order).then(data => {
         device.setDevices(data.rows)
         device.setTotalCount(data.count)
+        setIsFetching(false)
       })
       if(user.isAuth){getBasketDevices().then(data => {
         basket.setBasketDevices(data.devices)
@@ -134,8 +162,12 @@ const Shop = observer(() => {
             </Col>
             <Col md={9}>
 
-              <Form onSubmit={search} className='mt-2 mb-4'>
-                <InputGroup size='lg' className="mb-3">
+              <Col className='mb-3'>
+                <h2>{device.selectedType ? device.selectedType.name : 'Все устройства'}</h2>
+              </Col>
+
+              <Form onSubmit={search} className='mt-2 mb-2'>
+                <InputGroup size='lg' className="">
                   <Form.Control value={searchValue} onChange={(e) => setSearchValue(e.target.value)}
                     placeholder="Поиск устройства"
                     aria-label="Поиск устройства"
@@ -202,7 +234,7 @@ const Shop = observer(() => {
 
               </Col>
 
-                <DeviceList />
+                <DeviceList isFetching={isFetching} />
                 <Pages />
 
             </Col>

@@ -110,7 +110,9 @@ const Comments = observer(({deviceId}: CommentsProps) => {
 
             setPage(1)
             setDeletedAmount(0)
-            setIsHidden(false)
+
+            const pageCount = Math.ceil(commentCount / limit)
+            if(pageCount > 1)setIsHidden(false)
 
         })
     }
