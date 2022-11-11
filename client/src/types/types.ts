@@ -4,6 +4,7 @@ export type minDeviceDataType = {
     price: number,
     rating: number,
     img: string,
+    compressedImg: string,
     createdAt: string,
     updatedAt: string,
     typeId: number,

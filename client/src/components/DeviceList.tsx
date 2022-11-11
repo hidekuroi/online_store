@@ -38,13 +38,17 @@ const DeviceList = observer(({isFetching}: DeviceListPropsType) => {
           <Row className='d-flex'>
             {
               isFetching 
-            &&
+            ?
               skeletonItems.map((item, index) => {return <DeviceItem key={index} />})
+            :
+              <>
+                <hr className='mt-4'/>
+                <h3 className="mt-2 ml-2">Не найдено устройств по заданным критериям</h3>
+              </>
             }
               
           </Row>
-          <hr className='mt-4'/>
-          <h3 className="mt-2 ml-2">Не найдено устройств по заданным критериям</h3>
+          
         </>    
     }
     </Row>

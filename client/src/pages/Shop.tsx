@@ -33,6 +33,8 @@ const Shop = observer(() => {
 
     setSearchParams({page: device.page.toString(), searchValue})
 
+    device.setDevices([])
+
     setIsFetching(true)
 
     fetchDevices(undefined, undefined, device.page, device.limit, searchValue).then(data => {
@@ -181,7 +183,7 @@ const Shop = observer(() => {
 
 
               <Col style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                <Pages />
+                <Pages isFetching={isFetching} />
                 
               <Row style={{display: 'flex', alignItems: 'center'}}>
                 <Col>
@@ -235,7 +237,7 @@ const Shop = observer(() => {
               </Col>
 
                 <DeviceList isFetching={isFetching} />
-                <Pages />
+                <Pages isFetching={isFetching}/>
 
             </Col>
         </Row>

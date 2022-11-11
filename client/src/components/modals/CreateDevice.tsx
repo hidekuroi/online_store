@@ -120,7 +120,7 @@ const CreateDevice = observer(({show, onHide}: ModalPropsType) => {
             </Dropdown.Menu>
         </Dropdown>
 
-        <Form>
+        <Form onSubmit={addDevice}>
             <Form.Control value={name} onChange={(e) => setName(e.target.value)}
              className="mt-2 mb-2" placeholder={'Название устройства'}/>
 
@@ -128,7 +128,7 @@ const CreateDevice = observer(({show, onHide}: ModalPropsType) => {
              className="mt-2 mb-2" placeholder={'Стоимость устройства'} type='number'/>
 
             <div>Изображение: <Form.Control onChange={selectFile} className="mt-2 mb-2" type='file'/></div>
-            <div>Дополнительные изображения: <Form.Control multiple onChange={selectAdditionalFiles} className='mt-2 mb-2' type='file'/></div>
+            <div>Дополнительные изображения: <Form.Control multiple required={false} onChange={selectAdditionalFiles} className='mt-2 mb-2' type='file'/></div>
 
             <hr />
 
@@ -161,7 +161,7 @@ const CreateDevice = observer(({show, onHide}: ModalPropsType) => {
     </Modal.Body>
 
     <Modal.Footer>
-        <Button variant="primary" onClick={addDevice}>Добавить</Button>
+        <Button variant="primary" type='submit' onClick={addDevice}>Добавить</Button>
         <Button variant="outline-danger" onClick={onHide}>Закрыть</Button>
     </Modal.Footer>
   </Modal>

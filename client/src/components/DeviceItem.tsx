@@ -7,7 +7,6 @@ import BasketButton from './BasketButton'
 import classes from './DeviceItem.module.css'
 import { minDeviceDataType } from '../types/types'
 import { Skeleton } from '@mui/material'
-import useImageLoaded from '../hooks/useImageLoaded'
 
 type DeviceItemPropsType = {
     device?: minDeviceDataType,
@@ -17,6 +16,12 @@ type DeviceItemPropsType = {
 const DeviceItem = ({device, brand}: DeviceItemPropsType) => {
 
     const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false)
+
+    let imgSrc = ''
+
+    if(device?.compressedImg) imgSrc = `${process.env.REACT_APP_BASE_URL}compressed/${device?.compressedImg}${device?.img}`
+    else imgSrc = `${process.env.REACT_APP_BASE_URL}${device?.img}`
+    
 
     const onLoad = () => {
         setIsImageLoaded(true)
@@ -31,7 +36,7 @@ const DeviceItem = ({device, brand}: DeviceItemPropsType) => {
 		    {(device) ? 
             <>
             <Card.Img as={'img'} onLoad={onLoad} className='m-auto' style={{cursor: 'pointer', display: isImageLoaded ? '' : 'none'}}
-			    src={process.env.REACT_APP_BASE_URL + device.img} />
+			    src={imgSrc} />
             {!isImageLoaded && <Skeleton variant="rectangular"  height={'200px'}/>}
             </>
              :

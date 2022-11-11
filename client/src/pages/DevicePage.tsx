@@ -24,6 +24,7 @@ const DevicePage = observer(() => {
      brandId: 0,
      createdAt: '',
      img: '',
+     compressedImg: '',
      name: '',
      price: 0,
      rating: 0,
@@ -288,7 +289,7 @@ const DevicePage = observer(() => {
 	<h3>Характеристики:</h3>
         <Row className='m-2'>
           {device.info.map((info, index) => 
-            <Row style={{backgroundColor: index % 2 === 0 ? 'rgba(250,250,250)' : 'transparent', padding: 7}}
+            <Row style={{backgroundColor: index % 2 === 0 ? 'rgba(245,245,245)' : 'transparent', padding: 7}}
               className="d-inline-flex flex-column" key={info.id}>
                 {editMode 
                 ? <div><InputGroup className="mb-3">
