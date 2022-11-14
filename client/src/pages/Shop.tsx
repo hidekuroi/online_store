@@ -64,6 +64,8 @@ const Shop = observer(() => {
 
   useEffect(() => {
 
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+
     //const parsed = queryString.parse(navigate.location)
     const params = Object.fromEntries(Array.from(searchParams))
     device.setPage(Number(params.page) ? Number(params.page) : 1)
@@ -109,6 +111,8 @@ const Shop = observer(() => {
   }, [device])
 
   useEffect(() => {
+
+    window.scrollTo(0, 0);
 
     if(!searchValue && !device.selectedType?.id)setSearchParams({page: device.page.toString()})
     else if (!device.selectedType?.id) setSearchParams({page: device.page.toString(), searchValue})
@@ -237,7 +241,12 @@ const Shop = observer(() => {
               </Col>
 
                 <DeviceList isFetching={isFetching} />
+
+                <Col style={{marginTop: '30px'}}></Col>
+
                 <Pages isFetching={isFetching}/>
+
+                <Col style={{marginTop: '50px'}}></Col>
 
             </Col>
         </Row>

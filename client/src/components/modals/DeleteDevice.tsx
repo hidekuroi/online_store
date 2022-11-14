@@ -12,7 +12,10 @@ const DeleteDevice = observer(({show, onHide}: ModalPropsType) => {
   const [showErrorAlert, setShowErrorAlert] = useState(false)
 
 
-  const onDeleteDevice = () => {
+  const onDeleteDevice = (e?: any) => {
+    e?.stopPropagation()
+    e?.preventDefault()
+
     if(value.length > 0) {
       deleteDevice(Number(value)).then(data => {
         if(data > 0){
@@ -55,11 +58,11 @@ const DeleteDevice = observer(({show, onHide}: ModalPropsType) => {
   >
     <Modal.Header closeButton>
       <Modal.Title id="contained-modal-title-vcenter">
-        Удалить брэнд
+        Удалить устройство
       </Modal.Title>
     </Modal.Header>
     <Modal.Body>
-      <Form>
+      <Form onSubmit={onDeleteDevice}>
         <Form.Control value={value} onChange={(e) => setValue(e.target.value)}
          type='number' placeholder="Введите id устройства, которое хотите удалить"/>
       </Form>

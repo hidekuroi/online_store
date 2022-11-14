@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Col, Image } from 'react-bootstrap'
+import { Card, Col } from 'react-bootstrap'
 import star from '../assets/star.svg'
 import {Link} from 'react-router-dom'
 import { DEVICE_ROUTE } from '../utils/consts'
@@ -25,7 +25,6 @@ const DeviceItem = ({device, brand}: DeviceItemPropsType) => {
 
     const onLoad = () => {
         setIsImageLoaded(true)
-        console.log(device?.name)
     }
 
   return (

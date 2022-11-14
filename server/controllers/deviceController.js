@@ -47,7 +47,7 @@ class DeviceController {
                         })
                     })
 
-            const device = await Device.create({name, price, brandId, typeId, img: fileName, compressedImg: ''})
+            const device = await Device.create({name, price, brandId, typeId, img: fileName, compressedImg: compFileName})
 
             if (info) {
                 info = JSON.parse(info)
